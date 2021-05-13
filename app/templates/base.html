@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Tallie</title>
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+            crossorigin="anonymous">
+        </script>
+    </head>
+
+    <body>
+        <div class="sidenav">
+            <header class="sidenav-header">Tallie for Seller</header>
+            <ul class="sidenav-menu">
+                <li class=""><span><i class="sidenav-icon fas fa-qrcode"></i>Dashboard</span></li>
+                <li class="sidenav-item"><a href="#"><i class="sidenav-icon fas fa-book"></i>Your products</a></li>
+                <li class="sidenav-item"><a href="#"><i class="sidenav-icon fas fa-user"></i>Profile</a></li>
+                <li class="sidenav-item"><a href="#"><i class="sidenav-icon fas fa-people-carry"></i>Orders</a></li>
+                <li class="sidenav-item"><a href="#"><i class="sidenav-icon fas fa-shipping-fast"></i>Shipping</a></li>
+            </ul>
+        </div>
+        <section id="content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}
+            {% endblock %}
+        </section>
+    </body>
+</html>
+

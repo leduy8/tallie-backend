@@ -1,0 +1,53 @@
+*{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-decoration: none;
+  }
+  .sidenav {
+    position: fixed;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: #042331;
+    transition: all .5s ease;
+  }
+  .sidenav .sidenav-header {
+    font-size: 22px;
+    color: white;
+    line-height: 70px;
+    text-align: center;
+    /* background: #063146; */
+    user-select: none;
+  }
+  .sidenav .sidenav-menu a,
+  .sidenav .sidenav-menu span{
+    display: block;
+    height: 100%;
+    width: 100%;
+    line-height: 65px;
+    font-size: 20px;
+    color: white;
+    padding-left: 40px;
+    box-sizing: border-box;
+    border-bottom: 1px solid black;
+    border-top: 1px solid rgba(255,255,255,.1);
+    transition: .4s;
+  }
+  .sidenav-menu .sidenav-item:hover a{
+    padding-left: 50px;
+  }
+  .sidenav .sidenav-menu .sidenav-item i{
+    margin-right: 16px;
+  }
+  .sidenav{
+    left: 0;
+  }
+  
+  .sidenav-icon{
+    padding-right: 10px;
+  }
+  
+  #content {
+    margin-left: 300px;
+  }
