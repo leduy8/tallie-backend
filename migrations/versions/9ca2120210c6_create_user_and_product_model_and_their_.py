@@ -1,8 +1,8 @@
-"""create user and product table, create relationship between user and product
+"""create user and product model and their relationship
 
-Revision ID: 1bb01ccdcaa6
+Revision ID: 9ca2120210c6
 Revises: 
-Create Date: 2021-05-15 15:47:58.765545
+Create Date: 2021-05-15 18:16:05.487548
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1bb01ccdcaa6'
+revision = '9ca2120210c6'
 down_revision = None
 branch_labels = None
 depends_on = None

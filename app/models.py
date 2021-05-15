@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     address = db.Column(db.String(150))
     bio = db.Column(db.String(250))
     is_seller = db.Column(db.Boolean())
-    products = db.relationship('product', backref='user_id', lazy='dynamic')
+    products = db.relationship('Product', backref='seller', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
