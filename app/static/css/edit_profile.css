@@ -1,0 +1,47 @@
+.profile-image {
+    width: 200px;
+    height: 100%;
+}
+
+#confirm {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.button {
+    width: 100px;
+    height: 50px;
+    background-color: #042331;
+    border-radius: 25px;
+}
+
+.link, .link:visited, .link:hover, .link:active {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+textarea {
+    border:1px solid #999999;
+    width:100%;
+    margin:5px 0;
+    padding:3px;
+    box-sizing: border-box;
+}
+
+.input-container {
+    margin: 1rem;
+}
+
+.input-text {
+    width: 25%;
+    height: 25px;
+}
+
+.input-submit {
+    background-color: #042331;
+    border: 0;
+    color: #fff;
+    font-size: 1.1rem;
+}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block css_styles %}
+    <link href="{{ url_for('static', filename='css/edit_profile.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <section id="base-info">
+            <div class="row">
+                <div class="col-auto">
+                    <img class="profile-image" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="profile image">
+                </div>
+                <div class="col">
+                    <div class="input-container">
+                        {{ form.username(value=user.username, placeholder="Username", class='input-text') }}
+                    </div>
+                    <div class="input-container">
+                        {{ form.phone(value=user.phone, placeholder="Phone", class='input-text') }}
+                    </div>
+                    <div class="input-container">
+                        {{ form.email(value=user.email, placeholder="Email", class='input-text') }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                <h2>{{ form.bio.label }}</h2>
+                <textarea name="bio" id="bio" cols="30" rows="10">{{ user.bio }}</textarea>
+                <!-- {{ form.bio(cols=30, rows=10) }} -->
+            </div>
+        </section>
+        <hr>
+        <section id="address">
+            <h2>{{ form.address.label }}</h2>
+            <div class="row">
+                <!-- <div class="col"></div> -->
+                <div class="col">
+                    <div class="input-container">
+                        {{ form.address(value=user.address, placeholder="Address", class='input-text') }}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr>
+        <section id="payment">
+            <h2>Payment</h2>
+        </section>
+    
+        <section id="confirm">
+            <button class="button">
+                <a href="{{ url_for('profile') }}" class="link">Discard</a>
+            </button>
+            <!-- <button class="button" type="submit">
+                <a href="{{ url_for('edit_profile') }}" class="link">Done</a>
+            </button> -->
+            <button class="button" type="submit">
+                <!-- <a href="{{ url_for('edit_profile') }}" class="link">Done</a> -->
+                {{ form.submit(class='input-submit') }}
+            </button>
+        </section>
+    </form>
+{% endblock %}

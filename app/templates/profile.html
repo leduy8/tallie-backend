@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block css_styles %}
+    <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <section id="base-info">
+        <div class="row">
+            <div class="col-auto">
+                <img class="profile-image" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="profile image">
+            </div>
+            <div class="col">
+                <h2>{{ user.username }}</h2>
+                <p>{{ user.phone }}</p>
+                <p>{{ user.email }}</p>
+            </div>
+        </div>
+        <div class="mt-3">
+            <h2>Bio</h2>
+            <p>{{ user.bio }}</p>
+        </div>
+    </section>
+    <hr>
+    <section id="address">
+        <h2>Address</h2>
+        <div class="row">
+            <!-- <div class="col"></div> -->
+            <div class="col">
+                {{ user.address }}
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section id="payment">
+        <h2>Payment</h2>
+    </section>
+
+    {% if current_user %}
+        <section id="edit">
+            <button class="edit-button">
+                <a href="{{ url_for('edit_profile') }}" class="edit-link">Edit</a>
+            </button>
+        </section>
+    {% endif %}
+{% endblock %}

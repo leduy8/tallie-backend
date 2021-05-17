@@ -1,1 +1,2 @@
 FLASK_APP=tallie_app.py
+FLASK_DEBUG=1

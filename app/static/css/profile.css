@@ -1,0 +1,23 @@
+.profile-image {
+    width: 200px;
+    height: 100%;
+}
+
+#edit {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.edit-button {
+    width: 100px;
+    height: 50px;
+    background-color: #042331;
+    border-radius: 25px;
+}
+
+.edit-link, .edit-link:visited, .edit-link:hover, .edit-link:active {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1em;
+}
