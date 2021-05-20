@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField, IntegerField, FloatField, SubmitField
+from flask_wtf.file import FileField, FileRequired
 from wtforms.validators import DataRequired, Email, Length
 
 
@@ -17,3 +18,11 @@ class EditProfileForm(FlaskForm):
     bio = TextAreaField('Bio', validators=[Length(max=250)])
     address = StringField('Address', validators=[DataRequired(), Length(max=150)])
     submit = SubmitField('Done')
+
+class ProductForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=5, max=50)])
+    price = FloatField(validators=[DataRequired()])
+    quantity = IntegerField(validators=[DataRequired()])
+    description = TextAreaField(validators=[DataRequired(), Length(max=80)])
+    image = FileField(validators=[FileRequired()])
+    submit = SubmitField('Save')

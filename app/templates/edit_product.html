@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block css_styles %}
+    <link href="{{ url_for('static', filename='css/edit_product.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <section id="images">
+            <!-- {% for picture in product.pictures %}
+                {{ form.image() }}
+            {% endfor %} -->
+            {% for picture in product.pictures %}
+                <img class="product-picture" src="{{ picture }}" alt="">
+            {% endfor %}
+            <label class="image-upload ml-2">
+                <input type="file"/>
+                <div class="image-upload-symbol"><i class="fas fa-plus"></i></div>
+            </label>
+        </section>
+
+        <section id="base-info">
+            <div class="input-container">
+                {{ form.name.label() }}:
+                {{ form.name(value=product.name, placeholder="Name", class="input-text") }}
+            </div>
+            <div class="input-container">
+                {{ form.price.label() }}:
+                {{ form.price(value=product.price, placeholder="Price", class="input-number", type="number") }}
+                VND
+            </div>
+            <div class="input-container">
+                {{ form.quantity.label() }}:
+                {{ form.quantity(value=product.quantity, placeholder="Quantity", class="input-number", type="number") }}
+            </div>
+            <div>
+                <h3>{{ form.description.label() }}</h3>
+                <textarea name="description" id="description" cols="30" rows="10">{{ product.description }}</textarea>
+            </div>
+        </section>
+
+        <section>
+            <h3>Shipping Infomation</h3>
+        </section>
+    
+        <section id="confirm">
+            <button class="button">
+                <a href="{{ url_for('your_product_details', id=product.id) }}" class="link">Discard</a>
+            </button>
+            <button class="button" type="submit">
+                {{ form.submit(class='input-submit') }}
+            </button>
+        </section>
+    </form>
+{% endblock %}

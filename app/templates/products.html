@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block css_styles %}
+    <link href="{{ url_for('static', filename='css/products.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="search-form col-11">
+                <form class="">
+                    <input class="form-control mr-sm-2 input-searchbar" type="search" placeholder="Search for a book!" aria-label="Search">
+                </form>
+            </div>
+    
+            <div class="create-product col-1">
+                <button class="create-button">
+                    <a href="{{ url_for('your_product_new') }}" class="create-link"><i class="fas fa-plus"></i></a>
+                </button>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card">
+                                <img class="card-img-top" src="{{ product.pictures[0] }}" alt="Card image cap">
+                                <div class="card-body">
+                                    <h4 class="card-title"><a href="{{ url_for('your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a></h4>
+                                    <p class="card-text">
+                                        {{ product.price }} đ
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <br>
+
+                    <div class="col-12">
+                        <nav aria-label="...">
+                            <ul class="pagination">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

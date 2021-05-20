@@ -36,11 +36,9 @@
         <h2>Payment</h2>
     </section>
 
-    {% if current_user %}
-        <section id="edit">
-            <button class="edit-button">
-                <a href="{{ url_for('edit_profile') }}" class="edit-link">Edit</a>
-            </button>
-        </section>
-    {% endif %}
+    <section id="edit">
+        <button class="edit-button">
+            <a href="{{ url_for('edit_profile') }}" class="edit-link">Edit</a>
+        </button>
+    </section>
 {% endblock %}
