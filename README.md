@@ -25,7 +25,7 @@ Tallie uses a number of framework in the following:
 
 ## Installation
 
-Tallie requires Python 3.9+ to run.
+Tallie requires Python 3.7.9+ to run.
 
 ```sh
 cd tallie-backend
