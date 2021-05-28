@@ -1,3 +1,5 @@
+from enum import unique
+from uuid import uuid4
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_utils import URLType
@@ -5,27 +7,17 @@ from flask_login import UserMixin
 from app import db
 
 
-class Shipping(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    @classmethod
-    def validate(cls):
-        pass
-
-    def __repr__(self) -> str:
-        return f'<Shipping>'
-
-
 class Payment(db.Model):
     card_id = db.Column(db.Integer, primary_key=True)
     credentials = db.Column(db.String(8000))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     @classmethod
     def validate(cls):
         pass
 
     def __repr__(self) -> str:
-        return f'<Payment {self.card_number}'
+        return f'<Payment {self.card_id}'
 
 
 class Wishlist(db.Model):
@@ -55,20 +47,17 @@ class User(UserMixin, db.Model):
     bio = db.Column(db.String(250))
     is_seller = db.Column(db.Boolean())
     products = db.relationship('Product', backref='seller', lazy='dynamic')
-    payment = db.relationship('Shipping', lazy='dynamic')
-    shipping = db.relationship('Payment', lazy='dynamic')
+    payment = db.relationship('Payment', lazy='dynamic')
     wishlist = db.relationship(
-        'User',
+        'Product',
         secondary='wishlist',
         lazy='dynamic'
     )
     seen = db.relationship(
-        'User',
+        'Product',
         secondary='seen',
         lazy='dynamic'
     )
-    reviews = db.relationship('Review', lazy='dynamic')
-    orders = db.relationship('Order', lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -83,6 +72,7 @@ class User(UserMixin, db.Model):
 class Picture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(URLType)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
     def __repr__(self) -> str:
         return f'<Picture {self.url}>'
@@ -96,25 +86,34 @@ class Category(db.Model):
         return f'<Category {self.name}>'
 
 
+class ProductCategory(db.Model):
+    __tablename__ = 'productcategory'
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), primary_key=True)
+
+
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), index=True)
     price = db.Column(db.Float(precision=2))
     description = db.Column(db.String(80))
     quantity = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    pictures = db.relationship('Picture', backref='product', lazy='dynamic')
-    categories = db.relationship('Category', backref='product', lazy='dynamic')
-    reviews = db.relationship('Review', lazy='dynamic')
-    shipping_id = db.Column(db.Integer, db.ForeignKey('shipping.id'))
+    seller_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    pictures = db.relationship('Picture', lazy='dynamic')
+    categories = db.relationship(
+        'Category', 
+        secondary='productcategory',
+        lazy='dynamic'
+    )
 
     def __repr__(self) -> str:
         return f'<Product {self.name}>'
 
 
 class Order(db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
+    id = db.Column(db.String(128), primary_key=True, default=lambda: str(uuid4()))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     quantity = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     deliver_to = db.Column(db.String(150))
@@ -123,17 +122,23 @@ class Order(db.Model):
     is_delivered = db.Column(db.Boolean, default=False)
 
     def __repr__(self) -> str:
-        return f'<Order {self.user_id}${self.product_id}>'
+        return f'<Order {self.id}>'
 
 
 class Abuse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review_id = db.Column(db.Integer, db.ForeignKey('review.id'))
 
+    def __repr__(self) -> str:
+        return f'<Abuse {self.id}>'
+
 
 class Helpful(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review_id = db.Column(db.Integer, db.ForeignKey('review.id'))
+
+    def __repr__(self) -> str:
+        return f'<Helpful {self.id}>'
 
 
 class Review(db.Model):
@@ -144,7 +149,10 @@ class Review(db.Model):
     overview = db.Column(db.String(50))
     content = db.Column(db.String(150))
     prevent_spoiler = db.Column(db.Boolean)
-    started_reading = db.Column(db.DateTime, nullable=False)
-    finished_reading = db.Column(db.DateTime, nullable=False)
+    started_reading = db.Column(db.DateTime, nullable=True)
+    finished_reading = db.Column(db.DateTime, nullable=True)
     abuses = db.relationship('Abuse', lazy='dynamic')
     helpfuls = db.relationship('Helpful', lazy='dynamic')
+
+    def __repr__(self) -> str:
+        return f'<Review {self.id}, {self.content}>'
