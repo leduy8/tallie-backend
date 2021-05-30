@@ -1,5 +1,3 @@
-from enum import unique
-from uuid import uuid4
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_utils import URLType
@@ -80,7 +78,7 @@ class Picture(db.Model):
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(25), unique=True)
+    name = db.Column(db.String(50), unique=True)
 
     def __repr__(self) -> str:
         return f'<Category {self.name}>'
@@ -94,9 +92,10 @@ class ProductCategory(db.Model):
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), index=True)
+    name = db.Column(db.String(100), index=True)
+    author = db.Column(db.String(100), index=True)
     price = db.Column(db.Float(precision=2))
-    description = db.Column(db.String(80))
+    description = db.Column(db.String(2000))
     quantity = db.Column(db.Integer)
     seller_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     pictures = db.relationship('Picture', lazy='dynamic')
@@ -108,21 +107,6 @@ class Product(db.Model):
 
     def __repr__(self) -> str:
         return f'<Product {self.name}>'
-
-
-class Order(db.Model):
-    id = db.Column(db.String(128), primary_key=True, default=lambda: str(uuid4()))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-    quantity = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    deliver_to = db.Column(db.String(150))
-    has_taken = db.Column(db.Boolean, default=False)
-    is_delivering = db.Column(db.Boolean, default=False)
-    is_delivered = db.Column(db.Boolean, default=False)
-
-    def __repr__(self) -> str:
-        return f'<Order {self.id}>'
 
 
 class Abuse(db.Model):
