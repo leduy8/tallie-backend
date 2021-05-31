@@ -10,13 +10,13 @@
             <div class="col-auto">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
-                        {% for i in range(product.pictures|length) %}
+                        {#% for i in range(product.pictures|length) %}
                             {% if i == 0 %}
                                 <li data-target="#carouselExampleIndicators" data-slide-to="{{ i }}" class="active"></li>
                             {% else %}
                                 <li data-target="#carouselExampleIndicators" data-slide-to="{{ i }}"></li>
                             {% endif %}
-                        {% endfor %}
+                        {% endfor %#}
                     </ol>
                     <div class="carousel-inner">
                         {% for picture in product.pictures %}
@@ -43,7 +43,7 @@
             </div>
             <div class="col">
                 <h2>{{ product.name }}</h2>
-                <p>Price: {{ product.price }}</p>
+                <p>Price: {{ "{:,}".format(product.price|int) }}</p>
                 <p>Quantity: {{ product.quantity }}</p>
             </div>
         </div>
@@ -58,34 +58,30 @@
         </div>
     </section>
     <hr>
-    <section id="shipping-info">
-        <h2>Shipping Infomation</h2>
-    </section>
-    <hr>
     <section id="review">
         <h2>Review</h2>
         {% for review in reviews %}
             <div class="review-block mt-3 ml-3">
                 <div class="row">
                     <img class="thumbnail" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="profile image">
-                    <h4 class="col-1">{{ review.username }}</h4>
+                    <h4 class="col-1">{{ review[1].username }}</h4>
                 </div>
                 <div class="row">
-                    {% for i in range(review.star) %}
+                    {% for i in range(review[0].star) %}
                         <span><i class="fas fa-star"></i></span>
                     {% endfor %}
-                    {% for i in range(5 - review.star) %}
+                    {% for i in range(5 - review[0].star) %}
                         <span><i class="far fa-star"></i></span>
                     {% endfor %}
-                    <p class="ml-2"><strong>{{ review.overview }}</strong></p>
+                    <p class="ml-2"><strong>{{ review[0].overview }}</strong></p>
                 </div>
-                {% if review.started and review.finished.date() %}
+                {% if review[0].started_reading and review[0].finished_reading.date() %}
                     <div class="row">
-                        <p>Started at {{ review.started.date() }} - Finished at {{ review.finished.date() }}</p>
+                        <p>Started at {{ review[0].started_reading.date() }} - Finished at {{ review[0].finished_reading.date() }}</p>
                     </div>
                 {% endif %}
                 <div class="row">
-                    <p>{{ review.content }}</p>
+                    <p>{{ review[0].content }}</p>
                 </div>
             </div>
         {% endfor %}

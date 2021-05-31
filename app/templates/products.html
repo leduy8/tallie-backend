@@ -23,14 +23,16 @@
         <div class="row">
             <div class="col">
                 <div class="row">
-                    {% for product in products %}
+                    {% for product in products.items %}
                         <div class="col-12 col-md-6 col-lg-4">
                             <div class="card">
                                 <img class="card-img-top" src="{{ product.pictures[0] }}" alt="Card image cap">
                                 <div class="card-body">
-                                    <h4 class="card-title"><a href="{{ url_for('your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a></h4>
+                                    <h4 class="card-title">
+                                        <a href="{{ url_for('your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a>
+                                    </h4>
                                     <p class="card-text">
-                                        {{ product.price }} đ
+                                        {{ "{:,}".format(product.price|int) }} đ
                                     </p>
                                 </div>
                             </div>
@@ -42,17 +44,41 @@
                     <div class="col-12">
                         <nav aria-label="...">
                             <ul class="pagination">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
+                                {% if prev_url %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ prev_url }}">Previous</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="{{ prev_url }}">Previous</a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                                    {% if page_num %}
+                                        {% if products.page == page_num %}
+                                            <li class="page-item active">
+                                                <a class="page-link" href="{{ url_for('your_product', page=page_num) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ url_for('your_product', page=page_num) }}">{{ page_num }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% else %}
+                                        ...
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if next_url %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ next_url }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="{{ next_url }}">Next</a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </nav>
                     </div>

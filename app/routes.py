@@ -1,9 +1,8 @@
-from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db, login
 from .forms import LoginForm, EditProfileForm, ProductForm
-from .models import User
+from .models import User, Product, Review
 
 
 @login.user_loader
@@ -19,141 +18,27 @@ def index():
 @app.route('/your_product')
 @login_required
 def your_product():
-    products = [
-        {
-            'id': 1,
-            'name': 'Product 1',
-            'price': 15000,
-            'quantity': 6,
-            'description': 'Product 1 description',
-            'pictures': [
-                'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-
-                'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-                'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-            ]
-        },
-        {
-            'id': 2,
-            'name': 'Product 2',
-            'price': 25000,
-            'quantity': 9,
-            'description': 'Product 2 description',
-            'pictures': [
-                'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-
-                'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-                'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-            ]
-        },
-        {
-            'id': 3,
-            'name': 'Product 3',
-            'price': 45000,
-            'quantity': 6,
-            'description': 'Product 3 description',
-            'pictures': [
-                'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-
-                'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-                'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-            ]
-        },
-        {
-            'id': 4,
-            'name': 'Product 4',
-            'price': 17000,
-            'quantity': 1,
-            'description': 'Product 4 description',
-            'pictures': [
-                'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-
-                'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-                'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-            ]
-        },
-        {
-            'id': 5,
-            'name': 'Product 5',
-            'price': 150000,
-            'quantity': 16,
-            'description': 'Product 5 description',
-            'pictures': [
-                'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-
-                'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-                'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-            ]
-        },
-        {
-            'id': 6,
-            'name': 'Product 6',
-            'price': 150000,
-            'quantity': 13,
-            'description': 'Product 6 description',
-            'pictures': [
-                'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-
-                'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-                'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-            ]
-        }
-    ]
-    return render_template('products.html', title='Home', products=products)
+    page = request.args.get('page', 1, type=int)
+    products = Product.query.filter_by(seller_id=current_user.id).paginate(
+        page, app.config['PRODUCTS_PER_PAGE'], False
+    )
+    next_url = url_for('your_product', page=products.next_num) if products.has_next else None
+    prev_url = url_for('your_product', page=products.prev_num) if products.has_prev else None
+    return render_template('products.html', title='Home', products=products, next_url=next_url, prev_url=prev_url)
 
 
 @app.route('/your_product/<id>')
 @login_required
 def your_product_details(id):
-    product = {
-        'id': 6,
-        'name': 'Product 6',
-        'price': 150000,
-        'quantity': 13,
-        'description': 'Product 6 description',
-        'pictures': [
-            'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-            'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-            'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-        ]
-    }
-    reviews = [
-        {
-            'user_id': 1,
-            'username': 'duy1234',
-            'started': datetime(2021,3,11),
-            'finished': datetime(2021,3,18),
-            'overview': 'Simply love it',
-            'content': 'Bla bla bla this is the best book yesssssss',
-            'star': 4
-        },
-        {
-            'user_id': 1,
-            'username': 'duy1234',
-            'started': datetime(2021,3,11),
-            'finished': datetime(2021,3,18),
-            'overview': 'Simply love it',
-            'content': 'Bla bla bla this is the best book yesssssss',
-            'star': 4
-        },
-        {
-            'user_id': 2,
-            'username': 'duy12',
-            'started': datetime(2021,3,11),
-            'finished': datetime(2021,3,18),
-            'overview': 'Simply love it',
-            'content': 'Bla bla bla this is the best book yesssssss',
-            'star': 5
-        }
-    ]
-    return render_template('product_details.html', product=product, reviews=reviews)
+    product = Product.query.filter_by(id=id).first()
+    reviews_users = db.session.query(Review, User).filter(Review.product_id==product.id).join(User, Review.user_id==User.id)
+    return render_template('product_details.html', product=product, reviews=reviews_users)
 
 
 @app.route('/your_product/new')
 @login_required
 def your_product_new():
     form = ProductForm()
-
     return render_template('new_product.html', form=form)
 
 
@@ -161,7 +46,6 @@ def your_product_new():
 @login_required
 def your_product_edit(id):
     form = ProductForm()
-
     product = {
         'id': 6,
         'name': 'Product 6',

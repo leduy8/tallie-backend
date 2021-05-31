@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db
 from app.models import User, Product, Payment, Wishlist, Seen, Picture, Category, Abuse, Helpful, Review
 
@@ -6,6 +7,7 @@ def create_all():
     create_all_categories()
     create_base_user()
     create_all_product()
+    create_reviews()
 
 
 def create_all_categories():
@@ -106,6 +108,23 @@ def create_all_product():
     db.session.add(product_6)
     db.session.add(product_7)
     db.session.add(product_8)
+    db.session.commit()
+
+
+def create_reviews():
+    buyer_1 = User.query.filter_by(username='buyer007').first()
+    buyer_2 = User.query.filter_by(username='messi10').first()
+    buyer_3 = User.query.filter_by(username='ronaldo7').first()
+    product = Product.query.all()[0]
+    product_2 = Product.query.all()[1]
+    review_buyer_1 = Review(user_id=buyer_1.id, product_id=product.id, star=5, overview='Very good', content='I can\'t express how I love this book. It\'s like re-live childhood again.', prevent_spoiler=False, started_reading=datetime(2021, 1, 1), finished_reading=datetime(2021, 3, 1))
+    review_buyer_2 = Review(user_id=buyer_2.id, product_id=product.id, star=4, overview='Good', content='Decent book, I will let my boy read this!.', prevent_spoiler=False, started_reading=datetime(2021, 3, 12), finished_reading=datetime(2021, 4, 8))
+    review_buyer_3 = Review(user_id=buyer_3.id, product_id=product.id, star=4, overview='Very good', content='Aslan don\'t die noooo', prevent_spoiler=True)
+    review_buyer_4 = Review(user_id=buyer_3.id, product_id=product_2.id, star=4, overview='Very good', content='Very good book tho')
+    db.session.add(review_buyer_1)
+    db.session.add(review_buyer_2)
+    db.session.add(review_buyer_3)
+    db.session.add(review_buyer_4)
     db.session.commit()
 
 
