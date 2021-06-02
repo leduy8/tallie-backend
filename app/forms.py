@@ -20,9 +20,10 @@ class EditProfileForm(FlaskForm):
     submit = SubmitField('Done')
 
 class ProductForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired(), Length(min=5, max=50)])
+    name = StringField('Name', validators=[DataRequired(), Length(min=5, max=100)])
+    author = StringField('Author', validators=[DataRequired(), Length(min=3, max=100)])
     price = FloatField(validators=[DataRequired()])
     quantity = IntegerField(validators=[DataRequired()])
-    description = TextAreaField(validators=[DataRequired(), Length(max=80)])
-    image = FileField(validators=[FileRequired()])
+    description = TextAreaField(validators=[DataRequired(), Length(max=2000)])
+    # image = FileField(validators=[FileRequired()])
     submit = SubmitField('Save')

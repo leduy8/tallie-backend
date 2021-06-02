@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('your_product_edit', id=product.id) }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <section id="images">
             <!-- {% for picture in product.pictures %}
@@ -26,6 +26,10 @@
                 {{ form.name(value=product.name, placeholder="Name", class="input-text") }}
             </div>
             <div class="input-container">
+                {{ form.author.label() }}:
+                {{ form.author(placeholder="Author", class="input-text") }}
+            </div>
+            <div class="input-container">
                 {{ form.price.label() }}:
                 {{ form.price(value=product.price, placeholder="Price", class="input-number", type="number") }}
                 VND
@@ -38,10 +42,6 @@
                 <h3>{{ form.description.label() }}</h3>
                 <textarea name="description" id="description" cols="30" rows="10">{{ product.description }}</textarea>
             </div>
-        </section>
-
-        <section>
-            <h3>Shipping Infomation</h3>
         </section>
     
         <section id="confirm">

@@ -1,0 +1,80 @@
+.product-image {
+    width: 100px;
+    height: 100px;
+}
+
+.card1 {
+    position: relative;
+    margin-left: 160px;
+    z-index: 0;
+    border-right: 1px solid #F5F5F5
+}
+
+#progressbar {
+    position: absolute;
+    left: -120px;
+    overflow: hidden;
+    color: #042331
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 8px;
+    font-weight: 400;
+    margin-bottom: 36px;
+}
+
+#progressbar .step0:before {
+    content: "";
+    color: #fff
+}
+
+#progressbar li:before {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    font-size: 20px;
+    background: #fff;
+    border: 2px solid #042331;
+    border-radius: 50%;
+    margin: auto
+}
+
+#progressbar li:after {
+    content: '';
+    width: 3px;
+    height: 66px;
+    background: #BDBDBD;
+    position: absolute;
+    /* left: -50px; */
+    /* top: 15px; */
+    z-index: -1
+}
+
+#progressbar li:last-child:after {
+    top: 147px;
+}
+
+#progressbar li:nth-child(3):after {
+    top: 81px
+}
+
+#progressbar li:nth-child(2):after {
+    top: 0px
+}
+
+#progressbar li:first-child:after {
+    position: absolute;
+    top: -81px
+}
+
+#progressbar li.active:after {
+    background: #042331,
+}
+
+#progressbar li.active:before {
+    background: #042331;
+    font-family: FontAwesome;
+    content: "\f00c"
+}

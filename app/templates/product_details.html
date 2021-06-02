@@ -43,6 +43,7 @@
             </div>
             <div class="col">
                 <h2>{{ product.name }}</h2>
+                <h5>by: {{ product.author }}</h5>
                 <p>Price: {{ "{:,}".format(product.price|int) }}</p>
                 <p>Quantity: {{ product.quantity }}</p>
             </div>

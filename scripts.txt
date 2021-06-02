@@ -1,1 +1,1 @@
-pip install python-dotenv Flask, Flask-WTF, Flask-SQLAlchemy, Flask-Migrate, psycopg2 SQLAlchemy-Utils
+pip install python-dotenv Flask, Flask-WTF, Flask-SQLAlchemy, Flask-Migrate, psycopg2 SQLAlchemy-Utils, requests

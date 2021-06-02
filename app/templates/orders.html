@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <section class="search mt-4">
+            <div class="search-form col-8 col-12 col-md-6">
+                <form class="">
+                    <input class="form-control mr-sm-2 input-searchbar" type="search" placeholder="Search for an order" aria-label="Search">
+                </form>
+            </div>
+        </section>
+
+        <section class="orders">
+            {% for order in orders %}
+                <div class="col-12 col-md-6 col-lg-5 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{{ url_for('orders_details', id=order.id) }}">Order #{{ order.id }}</a>
+                            </h4>
+                            <p class="card-text">
+                                {{ order.created_at.strftime('%H:%M:%S %d/%m/%Y') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+    </div>
+{% endblock %}

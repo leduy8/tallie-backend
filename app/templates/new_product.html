@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('your_product_new') }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <section id="images">
             <label class="image-upload ml-2">
-                <input type="file"/>
+                {#<input type="file"/>#}
+                {# {{ form.image() }} #}
                 <div class="image-upload-symbol"><i class="fas fa-plus"></i></div>
             </label>
         </section>
@@ -18,6 +19,10 @@
             <div class="input-container">
                 {{ form.name.label() }}:
                 {{ form.name(placeholder="Name", class="input-text") }}
+            </div>
+            <div class="input-container">
+                {{ form.author.label() }}:
+                {{ form.author(placeholder="Author", class="input-text") }}
             </div>
             <div class="input-container">
                 {{ form.price.label() }}:
@@ -32,10 +37,6 @@
                 <h3>{{ form.description.label() }}</h3>
                 <textarea name="description" id="description" cols="30" rows="10"></textarea>
             </div>
-        </section>
-
-        <section>
-            <h3>Shipping Infomation</h3>
         </section>
     
         <section id="confirm">
