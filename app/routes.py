@@ -37,6 +37,19 @@ def your_product_details(id):
     return render_template('product_details.html', product=product, reviews=reviews_users)
 
 
+@app.route('/your_product/<id>/delete')
+@login_required
+def your_product_delete(id):
+    product = Product.query.filter_by(id=id).first()
+    reviews = Review.query.filter_by(product_id=product.id).all()
+    db.session.delete(product)
+    for review in reviews:
+        db.session.delete(review)
+    db.session.commit()
+    flash(f'Your product: {product.name} has been deleted!')
+    return redirect(url_for('your_product'))
+
+
 @app.route('/your_product/new', methods=['GET', 'POST'])
 @login_required
 def your_product_new():
