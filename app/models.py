@@ -1,8 +1,10 @@
+from time import time
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_utils import URLType
 from flask_login import UserMixin
-from app import db
+import jwt
+from app import app, db
 
 
 class Payment(db.Model):
@@ -40,10 +42,11 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(50), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     email = db.Column(db.String(50), index=True, unique=True)
+    email_activated = db.Column(db.Boolean, default=False)
     phone = db.Column(db.String(10))
     address = db.Column(db.String(150))
     bio = db.Column(db.String(250))
-    is_seller = db.Column(db.Boolean())
+    is_seller = db.Column(db.Boolean, default=False)
     products = db.relationship('Product', backref='seller', lazy='dynamic')
     payment = db.relationship('Payment', lazy='dynamic')
     wishlist = db.relationship(
@@ -62,6 +65,18 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_generate_token(self, expires_in=600):
+        print(jwt.encode({'generated_token': self.id, 'exp': time() + expires_in},app.config['SECRET_KEY'], algorithm='HS256'))
+        return jwt.encode({'generated_token': self.id, 'exp': time() + expires_in},app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_generated_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['generated_token']
+        except:
+            return
+        return User.query.get(id)
     
     def __repr__(self) -> str:
         return f'<User {self.username}>'
@@ -132,7 +147,7 @@ class Review(db.Model):
     star = db.Column(db.Integer)
     overview = db.Column(db.String(50))
     content = db.Column(db.String(150))
-    prevent_spoiler = db.Column(db.Boolean)
+    prevent_spoiler = db.Column(db.Boolean, default=False)
     started_reading = db.Column(db.DateTime, nullable=True)
     finished_reading = db.Column(db.DateTime, nullable=True)
     abuses = db.relationship('Abuse', lazy='dynamic')

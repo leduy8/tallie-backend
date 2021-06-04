@@ -13,7 +13,14 @@
             <div class="col">
                 <h2>{{ user.username }}</h2>
                 <p>{{ user.phone }}</p>
-                <p>{{ user.email }}</p>
+                <p>
+                    {{ user.email }}
+                    {% if user.email_activated %}
+                        <span class="text-success">(verified <i class="fas fa-check"></i>)</span>
+                    {% else %}
+                        <span class="text-muted">(not verified) <a class="text-info" href="{{ url_for('verify_email_request') }}">verify?</a></span>
+                    {% endif %}
+                </p>
             </div>
         </div>
         <div class="mt-3">

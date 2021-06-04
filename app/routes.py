@@ -5,6 +5,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db, login
 from .forms import LoginForm, EditProfileForm, ProductForm
 from .models import User, Product, Review
+from .email import send_verify_email_email
 
 
 @login.user_loader
@@ -206,3 +207,25 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@app.route('/verify_email_request')
+@login_required
+def verify_email_request():
+    send_verify_email_email(current_user)
+    flash('An email verification has been sent, please check your mail.')
+    return redirect(url_for('profile'))
+
+
+@app.route('/verify_email/<token>', methods=['GET', 'POST'])
+@login_required
+def verify_email(token):
+    user = User.verify_generated_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    user.email_activated = True
+    db.session.add(user)
+    db.session.commit()
+    return render_template('email/verify_email_success.html')
+    # flash('Your email has been verified!')
+    # return redirect(url_for('profile'))
