@@ -130,8 +130,6 @@ def edit_profile_info():
         current_user.address = form.address.data
         current_user.bio = form.bio.data
         db.session.commit()
-
-
         flash('Your changes has been made.')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
@@ -147,40 +145,60 @@ def edit_profile_info():
 def edit_profile_payment():
     form = PaymentForm()
 
-    payment = {
-        'card_number': '123456789012345',
-        'name': 'LE DUC DUY',
-        'start_date': date(2020, 3, 5),
-        'end_date': date(2020, 4, 5),
-        'cvc': '611',
-        'balance': '90000'
-    }
-    
-    if form.validate_on_submit():
-        # * Execute process of editing payment info
+    payment_data_from_db = Payment.query.filter_by(user_id=current_user.id).first()
+    url = 'https://tallie-payment.herokuapp.com/api/cards/info'
+    headers = {'X-Credentials': str(payment_data_from_db.credentials)}
 
-        flash('Your changes has been made.')
-        return redirect(url_for('profile'))
-    elif request.method == 'GET':
+    payment = requests.get(
+        url=url,
+        headers=headers
+    ).json()
+    
+    if request.method == 'GET':
         form.card_number.data = payment['card_number']
         form.card_owner_name.data = payment['name']
-        form.start_date.data = payment['start_date']
-        form.end_date.data = payment['end_date']
+        form.start_date.data = datetime.strptime(payment['start_date'], '%Y-%m-%d')
+        form.end_date.data = datetime.strptime(payment['end_date'], '%Y-%m-%d')
         form.cvc.data = payment['cvc']
-
     return render_template('edit_payment.html', title='Edit Payment', form=form, user=current_user, payment=payment)
 
 
-@app.route('/profile/payment/new')
+@app.route('/profile/payment/delete')
+def delete_profile_payment():
+    payment = Payment.query.filter_by(user_id=current_user.id).first()
+    db.session.delete(payment)
+    db.session.commit()
+    flash('Your payment has been deleted.')
+    return redirect(url_for('profile'))
+
+
+@app.route('/profile/payment/new', methods=['GET', 'POST'])
 def new_profile_payment():
     form = PaymentForm()
+    url = 'https://tallie-payment.herokuapp.com/api/cards/validate'
 
     if form.validate_on_submit():
-        # * Execute process of creating new payment
+        req = requests.post(
+            url=url,
+            json={
+                'card_number': form.card_number.data,
+                'name': form.card_owner_name.data,
+                'start_date': form.start_date.data.strftime('%Y-%m-%d'),
+                'end_date': form.end_date.data.strftime('%Y-%m-%d'),
+                'cvc': form.cvc.data
+            }
+        )
+        if (req.status_code == 200):
+            new_payment = Payment(card_number=form.card_number.data, credentials=req.text, user_id=current_user.id)
+            db.session.add(new_payment)
+            db.session.commit()
+            flash('Your new payment has been created.')
+        elif (req.status_code == 400 or req.status_code == 401):
+            flash('You have input wrong infomation, please check again.')
+        elif (req.status_code == 404):
+            return render_template('404.html')
 
-        flash('Your changes has been made.')
         return redirect(url_for('profile'))
-
     return render_template('edit_payment.html', title='New Payment', form=form, user=current_user, payment=None)
 
 
