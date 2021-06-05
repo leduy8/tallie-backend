@@ -8,7 +8,7 @@ from app import app, db
 
 
 class Payment(db.Model):
-    card_id = db.Column(db.Integer, primary_key=True)
+    card_number = db.Column(db.String(14), primary_key=True)
     credentials = db.Column(db.String(8000))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -17,7 +17,7 @@ class Payment(db.Model):
         pass
 
     def __repr__(self) -> str:
-        return f'<Payment {self.card_id}'
+        return f'<Payment {self.card_number} owned by user with id: {self.user_id}>'
 
 
 class Wishlist(db.Model):
@@ -25,7 +25,7 @@ class Wishlist(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
 
     def __repr__(self) -> str:
-        return f'<Wishlist>'
+        return f'<Wishlist owned by user with id: {self.user_id}>'
 
 
 class Seen(db.Model):
@@ -34,7 +34,7 @@ class Seen(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:
-        return f'<Seen lastseen={self.timestamp}>'
+        return f'<Seen lastseen={self.timestamp} by user with id: {self.user_id}>'
 
 
 class User(UserMixin, db.Model):

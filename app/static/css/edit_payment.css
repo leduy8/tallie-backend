@@ -3,6 +3,10 @@
     height: 100%;
 }
 
+.label {
+    width: 8rem;
+}
+
 #confirm {
     position: fixed;
     right: 20px;
@@ -16,30 +20,25 @@
     border-radius: 25px;
 }
 
-.label {
-    width: 8rem;
-}
-
 .link, .link:visited, .link:hover, .link:active {
     color: #fff;
     text-decoration: none;
     font-size: 1.1em;
 }
 
-textarea {
-    border:1px solid #999999;
-    width:100%;
-    margin:5px 0;
-    padding:3px;
-    box-sizing: border-box;
+.payment-icon {
+    font-size: 1.8rem;
+    vertical-align: middle;
+    margin-left: 1.3rem;
 }
 
-.input-container {
-    margin: 1rem;
+.card-number-link, .card-number-link:visited, .card-number-link:hover, .card-number-link:active {
+    text-decoration: none;
+    color: #000;
 }
 
-.input-text {
-    width: 25%;
+.payment-input {
+    width: 60%;
     height: 25px;
 }
 
@@ -49,10 +48,4 @@ textarea {
     color: #fff;
     font-size: 1.1rem;
     cursor: pointer;
-}
-
-.payment-icon {
-    font-size: 1.8rem;
-    vertical-align: middle;
-    margin-left: 1.3rem;
 }

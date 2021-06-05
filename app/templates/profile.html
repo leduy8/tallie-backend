@@ -40,12 +40,33 @@
     </section>
     <hr>
     <section id="payment">
-        <h2>Payment</h2>
+        <div class="custom-row">
+            <h2>Payment</h2>
+            <div class="ml-1 col-1">
+                <button class="create-button">
+                    {% if not payment %}
+                        <a href="{{ url_for('new_profile_payment') }}" class="create-link"><i class="fas fa-plus"></i></a>
+                    {% else %}
+                        <a href="#" class="create-link"><i class="fas fa-plus"></i></a>
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+        {% if payment %}
+            <div class="row">
+                <div class="card mt-3 ml-3">
+                    <div class="card-body">
+                        <a class="card-number-link" href="{{ url_for('edit_profile_payment') }}">{{ payment.card_number }}</a>
+                        <i class="fab fa-cc-visa payment-icon"></i>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </section>
 
     <section id="edit">
         <button class="edit-button">
-            <a href="{{ url_for('edit_profile') }}" class="edit-link">Edit</a>
+            <a href="{{ url_for('edit_profile_info') }}" class="edit-link">Edit</a>
         </button>
     </section>
 {% endblock %}

@@ -22,24 +22,24 @@
 
         <section id="base-info">
             <div class="input-container">
-                {{ form.name.label() }}:
+                {{ form.name.label(class='label') }}
                 {{ form.name(value=product.name, placeholder="Name", class="input-text") }}
             </div>
             <div class="input-container">
-                {{ form.author.label() }}:
+                {{ form.author.label(class='label') }}
                 {{ form.author(placeholder="Author", class="input-text") }}
             </div>
             <div class="input-container">
-                {{ form.price.label() }}:
+                {{ form.price.label(class='label') }}
                 {{ form.price(value=product.price, placeholder="Price", class="input-number", type="number") }}
                 VND
             </div>
             <div class="input-container">
-                {{ form.quantity.label() }}:
+                {{ form.quantity.label(class='label') }}
                 {{ form.quantity(value=product.quantity, placeholder="Quantity", class="input-number", type="number") }}
             </div>
             <div>
-                <h3>{{ form.description.label() }}</h3>
+                <h3>{{ form.description.label }}</h3>
                 <textarea name="description" id="description" cols="30" rows="10">{{ product.description }}</textarea>
             </div>
         </section>

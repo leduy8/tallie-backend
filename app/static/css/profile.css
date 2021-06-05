@@ -21,3 +21,33 @@
     text-decoration: none;
     font-size: 1.1em;
 }
+
+.payment-icon {
+    font-size: 1.8rem;
+    vertical-align: middle;
+    margin-left: 1.3rem;
+}
+
+.card-number-link, .card-number-link:visited, .card-number-link:hover, .card-number-link:active {
+    text-decoration: none;
+    color: #000;
+}
+
+.custom-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+}
+  
+.create-button {
+    width: 50px;
+    height: 50px;
+    background-color: #042331;
+    border-radius: 25px;
+}
+  
+.create-link, .create-link:visited, .create-link:hover, .create-link:active {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.65em;
+}

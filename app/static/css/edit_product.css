@@ -72,3 +72,7 @@ textarea {
     width: 8%;
     height: 25px;
 }
+
+.label {
+    width: 8rem;
+}

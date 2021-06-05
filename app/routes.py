@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import date, datetime
 import requests
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db, login
-from .forms import LoginForm, EditProfileForm, ProductForm
-from .models import User, Product, Review
+from .forms import LoginForm, ProfileForm, ProductForm, PaymentForm
+from .models import Payment, User, Product, Review
 from .email import send_verify_email_email
 
 
@@ -103,20 +103,35 @@ def your_product_edit(id):
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', title='Profile', user=current_user)
+    payment = Payment.query.filter_by(user_id=current_user.id).first()
+    # payment = {
+    #     'card_number': '123456789012345',
+    #     'credentials': 'asdasd1as231d32a1asdasd15',
+    #     'user_id': '1'
+    # }
+    return render_template('profile.html', title='Profile', user=current_user, payment=payment)
 
 
-@app.route('/profile/edit', methods=['GET', 'POST'])
+@app.route('/profile/info/edit', methods=['GET', 'POST'])
 @login_required
-def edit_profile():
-    form = EditProfileForm()
+def edit_profile_info():
+    form = ProfileForm()
+
+    payment = {
+        'card_number': '123456789012345',
+        'credentials': 'asdasd1as231d32a1asdasd15',
+        'user_id': '1'
+    }
+
     if form.validate_on_submit():
-        current_user.username = form.username.data
+        # current_user.username = form.username.data
         current_user.phone = form.phone.data
         current_user.email = form.email.data
         current_user.address = form.address.data
         current_user.bio = form.bio.data
         db.session.commit()
+
+
         flash('Your changes has been made.')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
@@ -125,7 +140,48 @@ def edit_profile():
         form.email.data = current_user.email
         form.address.data = current_user.address
         form.bio.data = current_user.bio
-    return render_template('edit_profile.html', title='Edit Profile', form=form, user=current_user)
+    return render_template('edit_profile.html', title='Edit Profile', form=form, user=current_user, payment=payment)
+
+
+@app.route('/profile/payment/edit')
+def edit_profile_payment():
+    form = PaymentForm()
+
+    payment = {
+        'card_number': '123456789012345',
+        'name': 'LE DUC DUY',
+        'start_date': date(2020, 3, 5),
+        'end_date': date(2020, 4, 5),
+        'cvc': '611',
+        'balance': '90000'
+    }
+    
+    if form.validate_on_submit():
+        # * Execute process of editing payment info
+
+        flash('Your changes has been made.')
+        return redirect(url_for('profile'))
+    elif request.method == 'GET':
+        form.card_number.data = payment['card_number']
+        form.card_owner_name.data = payment['name']
+        form.start_date.data = payment['start_date']
+        form.end_date.data = payment['end_date']
+        form.cvc.data = payment['cvc']
+
+    return render_template('edit_payment.html', title='Edit Payment', form=form, user=current_user, payment=payment)
+
+
+@app.route('/profile/payment/new')
+def new_profile_payment():
+    form = PaymentForm()
+
+    if form.validate_on_submit():
+        # * Execute process of creating new payment
+
+        flash('Your changes has been made.')
+        return redirect(url_for('profile'))
+
+    return render_template('edit_payment.html', title='New Payment', form=form, user=current_user, payment=None)
 
 
 @app.route('/orders')
