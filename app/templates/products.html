@@ -26,7 +26,7 @@
                     {% for product in products.items %}
                         <div class="col-12 col-md-6 col-lg-4">
                             <div class="card">
-                                <img class="card-img-top" src="{{ product.pictures[0] }}" alt="Card image cap">
+                                <img class="card-img-top product-image" src="{{ [image_service_url, product.pictures[0].img_id]|join('') }}" alt="Card image cap">
                                 <div class="card-body">
                                     <h4 class="card-title">
                                         <a href="{{ url_for('your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a>

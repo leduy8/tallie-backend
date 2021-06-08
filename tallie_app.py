@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, Product, Payment, Wishlist, Seen, Picture, Category, Abuse, Helpful, Review
+from app.models import User, Product, Payment, Wishlist, Seen, Picture, Avatar, Category, Abuse, Helpful, Review
 
 @app.shell_context_processor
 def make_shell_context():
@@ -11,6 +11,7 @@ def make_shell_context():
         'Wishlist': Wishlist,
         'Seen': Seen,
         'Picture': Picture,
+        'Avatar': Avatar,
         'Category': Category,
         'Abuse': Abuse,
         'Helpful': Helpful,

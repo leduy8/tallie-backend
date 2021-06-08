@@ -16,3 +16,6 @@ class Config(object):
     # ? For postgreSQL
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:123456@localhost/Tallie'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    IMAGE_SERVICE_URL = 'http://192.168.1.67:5000'
+    PAYMENT_SERVICE_URL = 'https://tallie-payment.herokuapp.com'

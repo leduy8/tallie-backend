@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, TextAreaField, IntegerField, FloatField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField, IntegerField, FloatField, SubmitField, MultipleFileField
 from wtforms.fields.html5 import DateField
-from flask_wtf.file import FileField, FileRequired
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import DataRequired, Email, Length
 
 
@@ -18,6 +18,7 @@ class ProfileForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     bio = TextAreaField('Bio', validators=[Length(max=250)])
     address = StringField('Address', validators=[DataRequired(), Length(max=150)])
+    # avatar = FileField()
     submit = SubmitField('Done')
     
 
@@ -27,7 +28,7 @@ class ProductForm(FlaskForm):
     price = FloatField(validators=[DataRequired()])
     quantity = IntegerField(validators=[DataRequired()])
     description = TextAreaField(validators=[DataRequired(), Length(max=2000)])
-    # image = FileField(validators=[FileRequired()])
+    images = MultipleFileField()
     submit = SubmitField('Save')
 
 

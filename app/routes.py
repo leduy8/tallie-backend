@@ -1,10 +1,11 @@
 from datetime import date, datetime
 import requests
+from werkzeug.utils import secure_filename
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db, login
 from .forms import LoginForm, ProfileForm, ProductForm, PaymentForm
-from .models import Payment, User, Product, Review
+from .models import Payment, User, Product, Review, Picture, Avatar
 from .email import send_verify_email_email
 
 
@@ -25,9 +26,15 @@ def your_product():
     products = Product.query.filter_by(seller_id=current_user.id).paginate(
         page, app.config['PRODUCTS_PER_PAGE'], False
     )
+    image_service_url = app.config['IMAGE_SERVICE_URL'] + '/images/'
+    pictures = []
+    for product in products.items:
+        pic = Picture.query.filter_by(product_id = product.id).first()
+        pictures.append(pic.img_id)
+
     next_url = url_for('your_product', page=products.next_num) if products.has_next else None
     prev_url = url_for('your_product', page=products.prev_num) if products.has_prev else None
-    return render_template('products.html', title='Home', products=products, next_url=next_url, prev_url=prev_url)
+    return render_template('products.html', title='Home', products=products, image_service_url=image_service_url, pictures=pictures, next_url=next_url, prev_url=prev_url)
 
 
 @app.route('/your_product/<id>')
@@ -35,7 +42,9 @@ def your_product():
 def your_product_details(id):
     product = Product.query.filter_by(id=id).first()
     reviews_users = db.session.query(Review, User).filter(Review.product_id==product.id).join(User, Review.user_id==User.id)
-    return render_template('product_details.html', product=product, reviews=reviews_users)
+    pictures = Picture.query.filter_by(product_id=product.id).all()
+    image_service_url = app.config['IMAGE_SERVICE_URL'] + '/images/'
+    return render_template('product_details.html', product=product, reviews=reviews_users, pictures=pictures, image_service_url=image_service_url)
 
 
 @app.route('/your_product/<id>/delete')
@@ -55,10 +64,22 @@ def your_product_delete(id):
 @login_required
 def your_product_new():
     form = ProductForm()
-    if form.validate_on_submit():
-        # print(form.image.data)
-        # req = requests.post('http://192.169.1.67:5000/images', data={'image': form.image.data})
-        # print(req)
+
+    url =  app.config['IMAGE_SERVICE_URL'] + '/upload_multiple'
+    headers = {}
+    payload = {}
+
+    if request.method == 'POST' and form.validate_on_submit():
+        files = []
+        for file in form.images.data:
+            files.append(('pic', (file.filename, file.stream.read(), file.mimetype)))
+
+        req = requests.post(
+            url=url,
+            headers=headers,
+            data=payload,
+            files=files
+        ).json()
 
         product = Product(
             name=form.name.data, 
@@ -68,7 +89,13 @@ def your_product_new():
             description=form.description.data,
             seller_id=current_user.id
         )
-        print(product)
+        db.session.add(product)
+        db.session.commit()
+
+        pictures = []
+        for pic in req['data']:
+            pictures.append(Picture(img_id=pic['id'], product_id=product.id))
+        product.pictures = pictures
         db.session.add(product)
         db.session.commit()
         flash('Your product has been added!')
@@ -146,7 +173,7 @@ def edit_profile_payment():
     form = PaymentForm()
 
     payment_data_from_db = Payment.query.filter_by(user_id=current_user.id).first()
-    url = 'https://tallie-payment.herokuapp.com/api/cards/info'
+    url = app.config['PAYMENT_SERVICE_URL'] + '/api/cards/info'
     headers = {'X-Credentials': str(payment_data_from_db.credentials)}
 
     payment = requests.get(
@@ -175,7 +202,7 @@ def delete_profile_payment():
 @app.route('/profile/payment/new', methods=['GET', 'POST'])
 def new_profile_payment():
     form = PaymentForm()
-    url = 'https://tallie-payment.herokuapp.com/api/cards/validate'
+    url = app.config['PAYMENT_SERVICE_URL'] + '/api/cards/validate'
 
     if form.validate_on_submit():
         req = requests.post(

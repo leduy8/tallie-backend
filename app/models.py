@@ -1,3 +1,4 @@
+from abc import ABC
 from time import time
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -49,6 +50,7 @@ class User(UserMixin, db.Model):
     is_seller = db.Column(db.Boolean, default=False)
     products = db.relationship('Product', backref='seller', lazy='dynamic')
     payment = db.relationship('Payment', lazy='dynamic')
+    avatar = db.relationship('Avatar', lazy='dynamic')
     wishlist = db.relationship(
         'Product',
         secondary='wishlist',
@@ -84,11 +86,14 @@ class User(UserMixin, db.Model):
 
 class Picture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(URLType)
+    img_id = db.Column(db.Integer)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
-    def __repr__(self) -> str:
-        return f'<Picture {self.url}>'
+
+class Avatar(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    img_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 class Category(db.Model):
