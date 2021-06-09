@@ -76,3 +76,25 @@ textarea {
 .label {
     width: 8rem;
 }
+
+.picture-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.picture-delete:before {
+    content: '✕';
+}
+
+.picture-delete {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    cursor: pointer;
+    color: #eee;
+}
+
+.picture-delete:hover {
+    color: #222;
+    background-color: #999;
+}

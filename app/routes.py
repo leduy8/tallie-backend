@@ -1,6 +1,5 @@
 from datetime import date, datetime
 import requests
-from werkzeug.utils import secure_filename
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db, login
@@ -108,7 +107,32 @@ def your_product_new():
 def your_product_edit(id):
     form = ProductForm()
     product = Product.query.filter_by(id=id).first()
+
+    upload_url =  app.config['IMAGE_SERVICE_URL'] + '/upload_multiple'
+    headers = {}
+    payload = {}
+
+    image_service_url = app.config['IMAGE_SERVICE_URL'] + '/images/'
+    pictures = []
+    pictures_from_db = Picture.query.filter_by(product_id=product.id).all()
+    for pic in pictures_from_db:
+        pictures.append(pic.img_id)
+
     if form.validate_on_submit():
+        files = []
+        for file in form.images.data:
+            files.append(('pic', (file.filename, file.stream.read(), file.mimetype)))
+
+        req = requests.post(
+            url=upload_url,
+            headers=headers,
+            data=payload,
+            files=files
+        ).json()
+
+        for pic in req['data']:
+            product.pictures.append(Picture(img_id=pic['id'], product_id=product.id))
+
         product.name = form.name.data
         product.author = form.author.data
         product.price = form.price.data
@@ -124,18 +148,33 @@ def your_product_edit(id):
         form.price.data = product.price
         form.quantity.data = product.quantity
         form.description.data = product.description
-    return render_template('edit_product.html', form=form, product=product)
+    return render_template('edit_product.html', form=form, product=product, image_service_url=image_service_url, pictures=pictures)
+
+
+@app.route('/your_product/pictures/<id>/delete')
+def delete_product_picture(id):
+    pic = Picture.query.filter_by(img_id=id).first()
+    product = Product.query.filter_by(id=pic.product_id).first()
+
+    url = app.config['IMAGE_SERVICE_URL'] + f'/images/{pic.img_id}/delete'
+    req = requests.delete(
+        url=url
+    )
+    if req.status_code == 404:
+        flash('Delete failed, image not found in image database.')
+        return redirect(url_for('your_product_edit', id=product.id))
+    product.pictures.remove(pic)
+    db.session.add(product)
+    db.session.delete(pic)
+    db.session.commit()
+    flash('Image deleted.')
+    return redirect(url_for('your_product_edit', id=product.id))
 
 
 @app.route('/profile')
 @login_required
 def profile():
     payment = Payment.query.filter_by(user_id=current_user.id).first()
-    # payment = {
-    #     'card_number': '123456789012345',
-    #     'credentials': 'asdasd1as231d32a1asdasd15',
-    #     'user_id': '1'
-    # }
     return render_template('profile.html', title='Profile', user=current_user, payment=payment)
 
 
