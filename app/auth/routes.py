@@ -14,7 +14,7 @@ def load_user(id):
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('your_product'))
+        return redirect(url_for('products.your_product'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -22,7 +22,7 @@ def login():
             flash('Invalid username or password')
             return redirect('auth.login')
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('your_product'))
+        return redirect(url_for('products.your_product'))
     return render_template('auth/login.html', title='Login', form=form)
 
 
@@ -37,7 +37,7 @@ def logout():
 def verify_email_request():
     send_verify_email_email(current_user)
     flash('An email verification has been sent, please check your mail.')
-    return redirect(url_for('profile'))
+    return redirect(url_for('profile.profile'))
 
 
 @bp.route('/verify_email/<token>', methods=['GET', 'POST'])
@@ -45,7 +45,7 @@ def verify_email_request():
 def verify_email(token):
     user = User.verify_generated_token(token)
     if not user:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     user.email_activated = True
     db.session.add(user)
     db.session.commit()

@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
 {% block css_styles %}
-    <link href="{{ url_for('static', filename='css/edit_payment.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/profile/edit_payment.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
                     {% if user.email_activated %}
                         <span class="text-success">(verified <i class="fas fa-check"></i>)</span>
                     {% else %}
-                        <span class="text-muted">(not verified) <a class="text-info" href="{{ url_for('verify_email_request') }}">verify?</a></span>
+                        <span class="text-muted">(not verified) <a class="text-info" href="{{ url_for('auth.verify_email_request') }}">verify?</a></span>
                     {% endif %}
                 </p>
             </div>
@@ -73,7 +73,7 @@
 
     <section id="confirm">
         <button class="button">
-            <a href="{{ url_for('profile') }}" class="link">Discard</a>
+            <a href="{{ url_for('profile.profile') }}" class="link">Discard</a>
         </button>
         <button type="button" class="button" data-toggle="modal" data-target="#deleteModal">
             <div class="link">Delete</div>
@@ -99,7 +99,7 @@
                             <div class="link">Close</div>
                         </button>
                         <button type="button" class="button">
-                            <a href="{{ url_for('delete_profile_payment') }}" class="link">Delete</a>
+                            <a href="{{ url_for('profile.delete_profile_payment') }}" class="link">Delete</a>
                         </button>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
 {% block css_styles %}
-    <link href="{{ url_for('static', filename='css/products.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/products/products.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
     
             <div class="create-product col-1">
                 <button class="create-button">
-                    <a href="{{ url_for('your_product_new') }}" class="create-link"><i class="fas fa-plus"></i></a>
+                    <a href="{{ url_for('products.your_product_new') }}" class="create-link"><i class="fas fa-plus"></i></a>
                 </button>
             </div>
         </div>
@@ -26,10 +26,14 @@
                     {% for product in products.items %}
                         <div class="col-12 col-md-6 col-lg-4">
                             <div class="card">
-                                <img class="card-img-top product-image" src="{{ [image_service_url, product.pictures[0].img_id]|join('') }}" alt="Card image cap">
+                                {% if pictures[loop.index0] != -1 %}
+                                    <img class="card-img-top product-image" src="{{ [image_service_url, product.pictures[0].img_id]|join('') }}" alt="Card image cap">
+                                {% else %}
+                                    <img class="card-img-top product-image" src="https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg" alt="Card image cap">
+                                {% endif %}
                                 <div class="card-body">
                                     <h4 class="card-title">
-                                        <a href="{{ url_for('your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a>
+                                        <a href="{{ url_for('products.your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a>
                                     </h4>
                                     <p class="card-text">
                                         {{ "{:,}".format(product.price|int) }} đ
@@ -58,11 +62,11 @@
                                     {% if page_num %}
                                         {% if products.page == page_num %}
                                             <li class="page-item active">
-                                                <a class="page-link" href="{{ url_for('your_product', page=page_num) }}">{{ page_num }}</a>
+                                                <a class="page-link" href="{{ url_for('products.your_product', page=page_num) }}">{{ page_num }}</a>
                                             </li>
                                         {% else %}
                                             <li class="page-item">
-                                                <a class="page-link" href="{{ url_for('your_product', page=page_num) }}">{{ page_num }}</a>
+                                                <a class="page-link" href="{{ url_for('products.your_product', page=page_num) }}">{{ page_num }}</a>
                                             </li>
                                         {% endif %}
                                     {% else %}

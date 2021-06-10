@@ -1,0 +1,82 @@
+{% extends 'main/base.html' %}
+
+{% block css_styles %}
+    <link href="{{ url_for('static', filename='css/profile/new_payment.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <section id="base-info">
+        <div class="row">
+            <div class="col-auto">
+                <img class="profile-image" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="profile image">
+            </div>
+            <div class="col">
+                <h2>{{ user.username }}</h2>
+                <p>{{ user.phone }}</p>
+                <p>
+                    {{ user.email }}
+                    {% if user.email_activated %}
+                        <span class="text-success">(verified <i class="fas fa-check"></i>)</span>
+                    {% else %}
+                        <span class="text-muted">(not verified) <a class="text-info" href="{{ url_for('auth.verify_email_request') }}">verify?</a></span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="mt-3">
+            <h2>Bio</h2>
+            <p>{{ user.bio }}</p>
+        </div>
+    </section>
+    <hr>
+    <section id="address">
+        <h2>Address</h2>
+        <div class="row">
+            <!-- <div class="col"></div> -->
+            <div class="col">
+                {{ user.address }}
+            </div>
+        </div>
+    </section>
+    <hr>
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <section id="payment">
+            <h2>Payment</h2>
+            <div class="row">
+                <div class="card col-6 mt-3 ml-3 mb-5">
+                    <div class="card-body">
+                        {{ form.card_number.label(class='label') }}
+                        {{ form.card_number(value=payment.card_number, placeholder="Card number", class='payment-input') }}
+                        <i class="fab fa-cc-visa payment-icon"></i>
+                    </div>
+                    <div class="card-body">
+                        {{ form.card_owner_name.label(class='label') }}
+                        {{ form.card_owner_name(value=payment.name, placeholder="Name", class='payment-input') }}
+                    </div>
+                    <div class="card-body">
+                        {{ form.start_date.label(class='label') }}
+                        {{ form.start_date(value=payment.start_date, class='payment-input') }}
+                    </div>
+                    <div class="card-body">
+                        {{ form.end_date.label(class='label') }}
+                        {{ form.end_date(value=payment.end_date, class='payment-input') }}
+                    </div>
+                    <div class="card-body">
+                        {{ form.cvc.label(class='label') }}
+                        {{ form.cvc(size=5, value=payment.cvc, placeholder='CVC') }}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="confirm">
+            <button class="button">
+                <a href="{{ url_for('profile.profile') }}" class="link">Discard</a>
+            </button>
+            <button class="button" type="submit">
+                {{ form.submit(class='input-submit') }}
+            </button>
+        </section>
+    </form>
+{% endblock %}

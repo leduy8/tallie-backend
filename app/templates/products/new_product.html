@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
 {% block css_styles %}
-    <link href="{{ url_for('static', filename='css/edit_product.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/products/edit_product.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ url_for('your_product_new') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('products.your_product_new') }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <section id="image-section">
             <label class="image-upload ml-2">
@@ -40,7 +40,7 @@
     
         <section id="confirm">
             <button class="button">
-                <a href="{{ url_for('your_product') }}" class="link">Discard</a>
+                <a href="{{ url_for('products.your_product') }}" class="link">Discard</a>
             </button>
             <button class="button" type="submit">
                 {{ form.submit(class='input-submit') }}

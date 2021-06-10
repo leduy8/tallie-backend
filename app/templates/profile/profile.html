@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
 {% block css_styles %}
-    <link href="{{ url_for('static', filename='css/profile.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/profile/profile.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
                     {% if user.email_activated %}
                         <span class="text-success">(verified <i class="fas fa-check"></i>)</span>
                     {% else %}
-                        <span class="text-muted">(not verified) <a class="text-info" href="{{ url_for('verify_email_request') }}">verify?</a></span>
+                        <span class="text-muted">(not verified) <a class="text-info" href="{{ url_for('auth.verify_email_request') }}">verify?</a></span>
                     {% endif %}
                 </p>
             </div>
@@ -45,7 +45,7 @@
             <div class="ml-1 col-1">
                 <button class="create-button">
                     {% if not payment %}
-                        <a href="{{ url_for('new_profile_payment') }}" class="create-link"><i class="fas fa-plus"></i></a>
+                        <a href="{{ url_for('profile.new_profile_payment') }}" class="create-link"><i class="fas fa-plus"></i></a>
                     {% else %}
                         <a href="#" class="create-link"><i class="fas fa-plus"></i></a>
                     {% endif %}
@@ -56,7 +56,7 @@
             <div class="row">
                 <div class="card mt-3 ml-3">
                     <div class="card-body">
-                        <a class="card-number-link" href="{{ url_for('edit_profile_payment') }}">{{ payment.card_number }}</a>
+                        <a class="card-number-link" href="{{ url_for('profile.edit_profile_payment') }}">{{ payment.card_number }}</a>
                         <i class="fab fa-cc-visa payment-icon"></i>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
 
     <section id="edit">
         <button class="edit-button">
-            <a href="{{ url_for('edit_profile_info') }}" class="edit-link">Edit</a>
+            <a href="{{ url_for('profile.edit_profile_info') }}" class="edit-link">Edit</a>
         </button>
     </section>
 {% endblock %}

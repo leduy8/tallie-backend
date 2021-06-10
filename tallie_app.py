@@ -1,5 +1,7 @@
-from app import app, db
+from app import create_app, db
 from app.models import User, Product, Payment, Wishlist, Seen, Picture, Avatar, Category, Abuse, Helpful, Review
+
+app = create_app()
 
 @app.shell_context_processor
 def make_shell_context():

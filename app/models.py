@@ -1,11 +1,11 @@
-from abc import ABC
 from time import time
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_utils import URLType
+from flask import current_app
 from flask_login import UserMixin
 import jwt
-from app import app, db
+from app import db
 
 
 class Payment(db.Model):
@@ -69,13 +69,13 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def get_generate_token(self, expires_in=600):
-        print(jwt.encode({'generated_token': self.id, 'exp': time() + expires_in},app.config['SECRET_KEY'], algorithm='HS256'))
-        return jwt.encode({'generated_token': self.id, 'exp': time() + expires_in},app.config['SECRET_KEY'], algorithm='HS256')
+        # print(jwt.encode({'generated_token': self.id, 'exp': time() + expires_in},app.config['SECRET_KEY'], algorithm='HS256'))
+        return jwt.encode({'generated_token': self.id, 'exp': time() + expires_in}, current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_generated_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['generated_token']
+            id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['generated_token']
         except:
             return
         return User.query.get(id)

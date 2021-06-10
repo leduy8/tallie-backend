@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
 {% block css_styles %}
-    <link href="{{ url_for('static', filename='css/product_details.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/products/product_details.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -94,10 +94,10 @@
             <div class="link">Delete</div>
         </button>
         <!-- <button class="button">
-            <a href="{{ url_for('your_product_delete', id=product.id) }}" class="link">Delete</a>
+            <a href="{{ url_for('products.your_product_delete', id=product.id) }}" class="link">Delete</a>
         </button> -->
         <button class="button">
-            <a href="{{ url_for('your_product_edit', id=product.id) }}" class="link">Edit</a>
+            <a href="{{ url_for('products.your_product_edit', id=product.id) }}" class="link">Edit</a>
         </button>
     </section>
 
@@ -120,7 +120,7 @@
                             <div class="link">Close</div>
                         </button>
                         <button type="button" class="button">
-                            <a href="{{ url_for('your_product_delete', id=product.id) }}" class="link">Delete</a>
+                            <a href="{{ url_for('products.your_product_delete', id=product.id) }}" class="link">Delete</a>
                         </button>
                     </div>
                 </div>
