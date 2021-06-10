@@ -25,8 +25,8 @@
                 <li class=""><span><i class="sidenav-icon fas fa-qrcode"></i>Dashboard</span></li>
                 <li class="sidenav-item"><a href="{{ url_for('your_product') }}"><i class="sidenav-icon fas fa-book"></i>Your products</a></li>
                 <li class="sidenav-item"><a href="{{ url_for('profile') }}"><i class="sidenav-icon fas fa-user"></i>Profile</a></li>
-                <li class="sidenav-item"><a href="{{ url_for('orders') }}"><i class="sidenav-icon fas fa-people-carry"></i>Orders</a></li>
-                <li class="sidenav-item"><a href="{{ url_for('logout') }}"><i class="sidenav-icon fas fa-sign-out-alt"></i>Logout</a></li>
+                <li class="sidenav-item"><a href="{{ url_for('orders.orders') }}"><i class="sidenav-icon fas fa-people-carry"></i>Orders</a></li>
+                <li class="sidenav-item"><a href="{{ url_for('auth.logout') }}"><i class="sidenav-icon fas fa-sign-out-alt"></i>Logout</a></li>
             </ul>
         </div>
         <section id="content">

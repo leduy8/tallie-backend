@@ -1,16 +1,10 @@
-from datetime import date, datetime
+from datetime import datetime
 import requests
 from flask import render_template, flash, redirect, url_for, request
-from flask_login import current_user, login_required, login_user, logout_user
+from flask_login import current_user, login_required
 from app import app, db, login
-from .forms import LoginForm, ProfileForm, ProductForm, PaymentForm
+from .forms import ProfileForm, ProductForm, PaymentForm
 from .models import Payment, User, Product, Review, Picture, Avatar
-from .email import send_verify_email_email
-
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
 
 @app.route('/')
@@ -268,104 +262,3 @@ def new_profile_payment():
     return render_template('edit_payment.html', title='New Payment', form=form, user=current_user, payment=None)
 
 
-@app.route('/orders')
-def orders():
-    orders = [
-        {
-            'id': 1,
-            'user_id': 1,
-            'product_id': 1,
-            'created_at': datetime(2021, 3, 5, 16, 30, 00)
-        },
-        {
-            'id': 2,
-            'user_id': 2,
-            'product_id': 1,
-            'created_at': datetime(2021, 3, 1, 16, 30, 00)
-        },
-        {
-            'id': 3,
-            'user_id': 3,
-            'product_id': 1,
-            'created_at': datetime(2021, 3, 5, 6, 30, 00)
-        },
-        {
-            'id': 4,
-            'user_id': 2,
-            'product_id': 1,
-            'created_at': datetime(2021, 3, 5, 22, 00, 00)
-        }
-    ]
-    return render_template('orders.html', orders=orders)
-
-
-@app.route('/orders/<id>')
-def orders_details(id):
-    order = {
-        'id': 1,
-        'userId': 1,
-        'productId': 1,
-        'createdAt': datetime(2021, 3, 5, 16, 30, 00),
-        'recipientName': 'Duy Le',
-        'recipientPhone': '0987654321',
-        'deliverTo': '121 Thai Ha, Thanh Xuan, Ha Noi',
-        'estimatingDateArrival': datetime(2020, 10, 3),
-        'hasTaken': True,
-        'isDelivering': False,
-        'isDelivered': False
-    }
-    product = {
-        'product_id': 1,
-        'name': 'Little Bobby',
-        'pictures': [
-            'https://worldwideinterweb.com/wp-content/uploads/2017/10/book20title20fail.png',
-            'http://pm1.narvii.com/6727/a84c910fa744274dc0ad7ebb14d9cd8a8a3401dfv2_00.jpg',
-            'https://i.pinimg.com/originals/d3/fa/4a/d3fa4a70c6571e238490b2c3cc179186.jpg'
-        ],
-        'price': 40000,
-        'quantity': 1
-    }
-    return render_template('orders_details.html', order=order, product=product)
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('your_product'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect('login')
-        login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('your_product'))
-    return render_template('login.html', title='Login', form=form)
-
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
-@app.route('/verify_email_request')
-@login_required
-def verify_email_request():
-    send_verify_email_email(current_user)
-    flash('An email verification has been sent, please check your mail.')
-    return redirect(url_for('profile'))
-
-
-@app.route('/verify_email/<token>', methods=['GET', 'POST'])
-@login_required
-def verify_email(token):
-    user = User.verify_generated_token(token)
-    if not user:
-        return redirect(url_for('index'))
-    user.email_activated = True
-    db.session.add(user)
-    db.session.commit()
-    return render_template('email/verify_email_success.html')
-    # flash('Your email has been verified!')
-    # return redirect(url_for('profile'))

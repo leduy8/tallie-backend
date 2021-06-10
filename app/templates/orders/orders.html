@@ -16,7 +16,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="{{ url_for('orders_details', id=order.id) }}">Order #{{ order.id }}</a>
+                                <a href="{{ url_for('orders.orders_details', id=order.id) }}">Order #{{ order.id }}</a>
                             </h4>
                             <p class="card-text">
                                 {{ order.created_at.strftime('%H:%M:%S %d/%m/%Y') }}

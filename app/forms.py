@@ -5,13 +5,6 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import DataRequired, Email, Length
 
 
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=6, max=50)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=128)])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Log In')
-
-
 class ProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=6, max=50)])
     phone = StringField('Phone', validators=[DataRequired()])
