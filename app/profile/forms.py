@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Email, Length
 
 
 class ProfileForm(FlaskForm):
-    # username = StringField('Username', validators=[DataRequired(), Length(min=6, max=50)])
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=25)])
     phone = StringField('Phone', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     bio = TextAreaField('Bio', validators=[Length(max=250)])

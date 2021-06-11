@@ -23,16 +23,18 @@ def edit_profile_info():
     payment = Payment.query.filter_by(user_id=current_user.id).first()
 
     if form.validate_on_submit():
-        # current_user.username = form.username.data
+        current_user.name = form.name.data
         current_user.phone = form.phone.data
-        current_user.email = form.email.data
         current_user.address = form.address.data
         current_user.bio = form.bio.data
+        if current_user.email != form.email.data:
+            current_user.email_activated = False
+        current_user.email = form.email.data
         db.session.commit()
         flash('Your changes has been made.')
         return redirect(url_for('profile.profile'))
     elif request.method == 'GET':
-        # form.username.data = current_user.username
+        form.name.data = current_user.name
         form.phone.data = current_user.phone
         form.email.data = current_user.email
         form.address.data = current_user.address

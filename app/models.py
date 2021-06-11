@@ -41,6 +41,7 @@ class Seen(db.Model):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), index=True, unique=True)
+    name = db.Column(db.String(25))
     password_hash = db.Column(db.String(128))
     email = db.Column(db.String(50), index=True, unique=True)
     email_activated = db.Column(db.Boolean, default=False)
@@ -67,6 +68,18 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_user_info(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'username': self.username,
+            'email': self.email,
+            'phone': self.phone,
+            'address': self.address,
+            'bio': self.bio,
+            'is_seller': self.is_seller
+        }
 
     def get_generate_token(self, expires_in=600):
         # print(jwt.encode({'generated_token': self.id, 'exp': time() + expires_in},app.config['SECRET_KEY'], algorithm='HS256'))
