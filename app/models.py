@@ -102,16 +102,35 @@ class Picture(db.Model):
     img_id = db.Column(db.Integer)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
+    def get_picture_info(self):
+        return {
+            'id': self.id,
+            'img_id': self.img_id,
+            'product_id': self.product_id
+        }
+
+    def __repr__(self) -> str:
+        return f'<Picture {self.img_id} of product {self.product_id}>'
+
 
 class Avatar(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     img_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __repr__(self) -> str:
+        return f'<Avatar {self.img_id} of user {self.user_id}>'
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True)
+
+    def get_category_info(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
 
     def __repr__(self) -> str:
         return f'<Category {self.name}>'
@@ -137,6 +156,26 @@ class Product(db.Model):
         secondary='productcategory',
         lazy='dynamic'
     )
+
+    def get_product_info(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'author': self.author,
+            'price': self.price,
+            'quantity': self.quantity,
+            'description': self.description,
+            'pictures': [pic.get_picture_info() for pic in self.pictures.all()],
+            'seller_id': self.seller_id
+        }
+
+    def get_product_info_minimum(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'price': self.price,
+            'quantity': self.quantity
+        }
 
     def __repr__(self) -> str:
         return f'<Product {self.name}>'

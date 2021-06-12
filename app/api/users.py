@@ -36,6 +36,10 @@ def user_register():
 @bp.route('/users/<id>')
 def user_lookup(id):
     user = User.query.filter_by(id=id).first()
+
+    if not user:
+        return not_found('User\'s not found')
+
     return jsonify(user.get_user_info())
 
 
@@ -43,6 +47,10 @@ def user_lookup(id):
 @token_required
 def user_profile(decoded):
     user = User.query.filter_by(id=decoded['id']).first()
+
+    if not user:
+        return not_found('User\'s not found')
+        
     return jsonify(user.get_user_info())
 
 
@@ -66,6 +74,24 @@ def user_update(decoded):
         user.email_activated = False
     user.email = data['email']
     user.set_password(data['password'])
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify(user.get_user_info())
+
+
+@bp.route('/users/to_seller')
+@token_required
+def become_seller(decoded):
+    user = User.query.filter_by(id=decoded['id']).first()
+
+    if not user:
+        return not_found('User\'s not found')
+
+    if user.is_seller == True:
+        return bad_request('User is already a seller.')
+
+    user.is_seller = True
     db.session.add(user)
     db.session.commit()
 

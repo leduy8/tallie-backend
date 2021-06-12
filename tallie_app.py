@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import User, Product, Payment, Wishlist, Seen, Picture, Avatar, Category, Abuse, Helpful, Review
+from app.models import User, Product, Payment, Wishlist, Seen, Picture, Avatar, Category, Abuse, Helpful, Review, ProductCategory
 
 app = create_app()
 
@@ -17,6 +17,7 @@ def make_shell_context():
         'Category': Category,
         'Abuse': Abuse,
         'Helpful': Helpful,
-        'Review': Review
+        'Review': Review,
+        'ProductCategory': ProductCategory
     }
 

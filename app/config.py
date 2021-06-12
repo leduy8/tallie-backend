@@ -19,3 +19,4 @@ class Config(object):
 
     IMAGE_SERVICE_URL = 'http://192.168.1.67:5000'
     PAYMENT_SERVICE_URL = 'https://tallie-payment.herokuapp.com'
+    SHIPPING_SERVICE_URL = ''

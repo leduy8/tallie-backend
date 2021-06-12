@@ -1,7 +1,7 @@
 import jwt
 from functools import wraps
-from flask import request, jsonify, current_app
-from app.models import User
+from flask import request, current_app
+from app.api.errors import unauthorized
 
 
 def token_required(f):
@@ -13,12 +13,12 @@ def token_required(f):
             token = request.headers['X-Access-Token']
 
         if not token:
-            return jsonify({'message' : 'Token is missing!'}), 401
-
+            return unauthorized('Token is missing!')
+            
         try:
             data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
             return f(data, *args, **kwargs)
         except:
-            return jsonify({'message' : 'Token is invalid!'}), 401
+            return unauthorized('Token is invalid!')
 
     return decorated
