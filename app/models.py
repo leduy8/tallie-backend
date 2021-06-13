@@ -17,6 +17,12 @@ class Payment(db.Model):
     def validate(cls):
         pass
 
+    def get_payment_info(self):
+        return {
+            'card_number': self.card_number,
+            'credentials': self.credentials
+        }
+
     def __repr__(self) -> str:
         return f'<Payment {self.card_number} owned by user with id: {self.user_id}>'
 
