@@ -210,5 +210,18 @@ class Review(db.Model):
     abuses = db.relationship('Abuse', lazy='dynamic')
     helpfuls = db.relationship('Helpful', lazy='dynamic')
 
+    def get_review_info(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'product_id': self.product_id,
+            'star': self.star,
+            'overview': self.overview,
+            'content': self.content,
+            'prevent_spoiler': self.prevent_spoiler,
+            'started_reading': self.started_reading,
+            'finished_reading': self.finished_reading
+        }
+
     def __repr__(self) -> str:
         return f'<Review {self.id}, {self.content}>'

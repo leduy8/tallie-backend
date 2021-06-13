@@ -10,6 +10,7 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['no-reply@tallie.com']
     PRODUCTS_PER_PAGE = 6
+    REVIEWS_PER_PAGE = 8
 
     # ? For sqlite
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(base_dir, 'app.db')
