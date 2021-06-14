@@ -190,6 +190,7 @@ class Product(db.Model):
 class Abuse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review_id = db.Column(db.Integer, db.ForeignKey('review.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self) -> str:
         return f'<Abuse {self.id}>'
@@ -198,6 +199,7 @@ class Abuse(db.Model):
 class Helpful(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     review_id = db.Column(db.Integer, db.ForeignKey('review.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self) -> str:
         return f'<Helpful {self.id}>'

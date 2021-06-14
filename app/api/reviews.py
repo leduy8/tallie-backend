@@ -6,7 +6,7 @@ from ..models import Product, User, Review, Abuse, Helpful
 from ..middlewares import token_required
 
 
-@bp.route('/reviews/<product_id>', methods=['GET'])
+@bp.route('/products/<product_id>/reviews', methods=['GET'])
 def get_all_reviews(product_id):
     page = request.args.get('page', 1, type=int)
     reviews = Review.query.filter_by(product_id=product_id).paginate(
@@ -28,7 +28,7 @@ def get_all_reviews(product_id):
     })
 
 
-@bp.route('/reviews/<product_id>', methods=['POST'])
+@bp.route('/products/<product_id>/reviews', methods=['POST'])
 @token_required
 def post_a_review(decoded, product_id):
     user = User.query.filter_by(id=decoded['id']).first()
@@ -68,7 +68,7 @@ def post_a_review(decoded, product_id):
     return jsonify(review.get_review_info()), 201
 
 
-@bp.route('/reviews/<product_id>', methods=['PUT'])
+@bp.route('/products/<product_id>/reviews', methods=['PUT'])
 @token_required
 def edit_a_review(decoded, product_id):
     user = User.query.filter_by(id=decoded['id']).first()
@@ -103,7 +103,7 @@ def edit_a_review(decoded, product_id):
     return jsonify(review.get_review_info())
 
 
-@bp.route('/reviews/<product_id>', methods=['DELETE'])
+@bp.route('/products/<product_id>/reviews', methods=['DELETE'])
 @token_required
 def delete_a_review(decoded, product_id):
     user = User.query.filter_by(id=decoded['id']).first()
@@ -124,39 +124,135 @@ def delete_a_review(decoded, product_id):
     return jsonify('Review deleted')
 
 
-# @bp.route('/reviews/<product_id>/abuse')
-# @token_required
-# def report_abuse(decoded, product_id):
-#     user = User.query.filter_by(id=decoded['id']).first()
+@bp.route('/products/<product_id>/reviews/<review_id>/abuse', methods=['POST'])
+@token_required
+def report_abuse(decoded, product_id, review_id):
+    user = User.query.filter_by(id=decoded['id']).first()
 
-#     if not user:
-#         return not_found('User\'s not found')
+    if not user:
+        return not_found('User\'s not found')
 
-#     product = Product.query.filter_by(id=product_id).first()
+    product = Product.query.filter_by(id=product_id).first()
 
-#     if not product:
-#         return not_found('Product\'s not found')
+    if not product:
+        return not_found('Product\'s not found')
 
-#     review = Review.query.filter_by(product_id=product_id).first()
+    review = Review.query.filter_by(id=review_id).first()
 
-#     if not review:
-#         return not_found('Review\'s not found')
+    if not review:
+        return not_found('Review\'s not found')
 
-#     abuse = Abuse(review_id=review.id)
+    if Abuse.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first():
+        return bad_request('User can only send one abuse report per product.')
 
-#     review.abuses.append(abuse)
+    if Helpful.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first():
+        helpful = Helpful.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first()
+        review.helpfuls.remove(helpful)
+        db.session.delete(helpful)
+        db.session.commit()
 
-#     db.session.add(review)
-#     db.session.add(abuse)
-#     db.session.commit()
+    abuse = Abuse(review_id=review.id, user_id=user.id)
 
-#     return jsonify('Abuse request has been sent'), 201
+    review.abuses.append(abuse)
+    db.session.add(review)
+    db.session.add(abuse)
+    db.session.commit()
+
+    return jsonify('Abuse report has been sent'), 201
 
 
-# @bp.route('/reviews/<product_id>/helpful')
-# @token_required
-# def find_helpful(decoded, product_id):
-#     user = User.query.filter_by(id=decoded['id']).first()
+@bp.route('/products/<product_id>/reviews/<review_id>/abuse', methods=['DELETE'])
+@token_required
+def delete_abuse_report(decoded, product_id, review_id):
+    user = User.query.filter_by(id=decoded['id']).first()
 
-#     if not user:
-#         return not_found('User\'s not found')
+    if not user:
+        return not_found('User\'s not found')
+
+    product = Product.query.filter_by(id=product_id).first()
+
+    if not product:
+        return not_found('Product\'s not found')
+
+    review = Review.query.filter_by(id=review_id).first()
+
+    if not review:
+        return not_found('Review\'s not found')
+
+    abuse = Abuse.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first()
+
+    if not abuse:
+        return not_found('User\'s abuse report not found')
+
+    review.abuses.remove(abuse)
+    db.session.delete(abuse)
+    db.session.commit()
+
+    return jsonify('Abuse report has been deleted.')
+
+
+@bp.route('/products/<product_id>/reviews/<review_id>/helpful', methods=['POST'])
+@token_required
+def find_helpful(decoded, product_id, review_id):
+    user = User.query.filter_by(id=decoded['id']).first()
+
+    if not user:
+        return not_found('User\'s not found')
+
+    product = Product.query.filter_by(id=product_id).first()
+
+    if not product:
+        return not_found('Product\'s not found')
+
+    review = Review.query.filter_by(id=review_id).first()
+
+    if not review:
+        return not_found('Review\'s not found')
+
+    if Helpful.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first():
+        return bad_request('User can only send one find helpful report per product.')
+
+    if Abuse.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first():
+        abuse = Abuse.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first()
+        review.abuses.remove(abuse)
+        db.session.delete(abuse)
+        db.session.commit()
+
+    helpful = Helpful(review_id=review.id, user_id=user.id)
+
+    review.helpfuls.append(helpful)
+    db.session.add(review)
+    db.session.add(helpful)
+    db.session.commit()
+
+    return jsonify('Find helpful report has been sent'), 201
+
+
+@bp.route('/products/<product_id>/reviews/<review_id>/helpful', methods=['DELETE'])
+@token_required
+def delete_find_helpful(decoded, product_id, review_id):
+    user = User.query.filter_by(id=decoded['id']).first()
+
+    if not user:
+        return not_found('User\'s not found')
+
+    product = Product.query.filter_by(id=product_id).first()
+
+    if not product:
+        return not_found('Product\'s not found')
+
+    review = Review.query.filter_by(id=review_id).first()
+
+    if not review:
+        return not_found('Review\'s not found')
+
+    helpful = Helpful.query.filter_by(user_id=user.id).filter_by(review_id=review.id).first()
+
+    if not helpful:
+        return not_found('User\'s find helpful report not found')
+
+    review.helpfuls.remove(helpful)
+    db.session.delete(helpful)
+    db.session.commit()
+
+    return jsonify('Find helpful report has been deleted.')
