@@ -6,22 +6,7 @@
 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="search-form col-11">
-                <form action="{{ url_for('products.search_products') }}" class="" method="POST">
-                    {{ form.hidden_tag() }}
-                    <input class="form-control mr-sm-2 input-searchbar" name="search" type="search" placeholder="Search for a book!" aria-label="Search">
-                </form>
-            </div>
-    
-            <div class="create-product col-1">
-                <button class="create-button">
-                    <a href="{{ url_for('products.your_product_new') }}" class="create-link"><i class="fas fa-plus"></i></a>
-                </button>
-            </div>
-        </div>
-    
-        <div class="row">
+        <div class="row mt-5">
             <div class="col">
                 <div class="row">
                     {% for product in products.items %}

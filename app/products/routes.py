@@ -1,15 +1,17 @@
 import requests
 from flask import render_template, flash, redirect, url_for, request, current_app
 from flask_login import current_user, login_required
+from sqlalchemy import or_
 from app import db
 from app.products import bp
-from .forms import ProductForm
+from .forms import ProductForm, SearchForm
 from ..models import User, Product, Review, Picture
 
 
 @bp.route('/your_product')
 @login_required
 def your_product():
+    form = SearchForm()
     page = request.args.get('page', 1, type=int)
     products = Product.query.filter_by(seller_id=current_user.id).paginate(
         page, current_app.config['PRODUCTS_PER_PAGE'], False
@@ -25,7 +27,7 @@ def your_product():
 
     next_url = url_for('products.your_product', page=products.next_num) if products.has_next else None
     prev_url = url_for('products.your_product', page=products.prev_num) if products.has_prev else None
-    return render_template('products/products.html', title='Home', products=products, image_service_url=image_service_url, pictures=pictures, next_url=next_url, prev_url=prev_url)
+    return render_template('products/products.html', title='Home', products=products, form=form, image_service_url=image_service_url, pictures=pictures, next_url=next_url, prev_url=prev_url)
 
 
 @bp.route('/your_product/<id>')
@@ -178,5 +180,22 @@ def delete_product_picture(id):
     return redirect(url_for('products.your_product_edit', id=product.id))
 
 
+@bp.route('/your_product/search', methods=['POST'])
+def search_products():
+    query = request.form['search']
+    page = request.args.get('page', 1, type=int)
+    products = Product.query.filter(or_(Product.name.ilike(f'%{query}%'), Product.author.ilike(f'%{query}%'))).paginate(
+        page, current_app.config['PRODUCTS_PER_PAGE'], False
+    )
+    image_service_url = current_app.config['IMAGE_SERVICE_URL'] + '/images/'
+    pictures = []
+    for product in products.items:
+        pic = Picture.query.filter_by(product_id = product.id).first()
+        if pic is not None:
+            pictures.append(pic.img_id)
+        else:
+            pictures.append(-1)
 
-
+    next_url = url_for('products.search_products', page=products.next_num) if products.has_next else None
+    prev_url = url_for('products.search_products', page=products.prev_num) if products.has_prev else None
+    return render_template('products/search_products.html', title='Search', products=products, image_service_url=image_service_url, pictures=pictures, next_url=next_url, prev_url=prev_url)

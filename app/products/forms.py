@@ -12,3 +12,7 @@ class ProductForm(FlaskForm):
     description = TextAreaField(validators=[DataRequired(), Length(max=2000)])
     images = MultipleFileField()
     submit = SubmitField('Save')
+
+
+class SearchForm(FlaskForm):
+    q = StringField('Search', validators=[DataRequired()])
