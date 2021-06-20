@@ -1,7 +1,7 @@
 from datetime import datetime
 from app import db
 from app.models import User, Product, Payment, Wishlist, Seen, Picture, Category, Abuse, Helpful, Review
-from .tallie_app import app
+from tallie_app import app
 
 
 def create_all():
