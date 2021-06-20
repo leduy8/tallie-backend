@@ -1,1 +1,1 @@
-web: flask db upgrade; python seed.py; gunicorn tallie_app:app
+web: flask db upgrade; gunicorn tallie_app:app
