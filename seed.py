@@ -1,13 +1,15 @@
 from datetime import datetime
 from app import db
 from app.models import User, Product, Payment, Wishlist, Seen, Picture, Category, Abuse, Helpful, Review
+from .tallie_app import app
 
 
 def create_all():
-    create_all_categories()
-    create_base_user()
-    create_all_product()
-    create_reviews()
+    with app.app_context():
+        create_all_categories()
+        create_base_user()
+        create_all_product()
+        create_reviews()
 
 
 def create_all_categories():
