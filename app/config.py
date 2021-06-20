@@ -1,5 +1,5 @@
 import os
-base_dir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'Tallie1234'
@@ -15,9 +15,13 @@ class Config(object):
     # ? For sqlite
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(base_dir, 'app.db')
     # ? For postgreSQL
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:123456@localhost/Tallie'
+    uri = os.getenv("DATABASE_URL")
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_DATABASE_URI = uri or 'sqlite:///' + os.path.join(basedir, 'app.db')
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:123456@localhost/Tallie'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    IMAGE_SERVICE_URL = 'http://192.168.1.67:5000'
+    IMAGE_SERVICE_URL = 'https://tallie-image.herokuapp.com'
     PAYMENT_SERVICE_URL = 'https://tallie-payment.herokuapp.com'
     SHIPPING_SERVICE_URL = ''

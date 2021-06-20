@@ -1,0 +1,1 @@
+web: flask db upgrade; gunicorn tallie_app:app
