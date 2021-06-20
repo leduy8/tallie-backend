@@ -62,19 +62,19 @@ def create_all_categories():
 
 
 def create_base_user():
-    seller = User(username='duy123', name='Le Duc Duy', email='fantasyboi8@gmail.com', phone='0987654321',
-                  address='121 Thai Ha, Thanh Xuan, Ha Noi', bio='This is a very very very very very very very long text!', is_seller=True)
+    # seller = User(username='duy123', name='Le Duc Duy', email='fantasyboi8@gmail.com', phone='0987654321',
+    #               address='121 Thai Ha, Thanh Xuan, Ha Noi', bio='This is a very very very very very very very long text!', is_seller=True)
     buyer1 = User(username='buyer007', name='James Bond', email='james_bond_007@gmail.com', phone='0987654322',
                   address='127 Thai Thinh, Thanh Xuan, Ha Noi', bio='This is a very very very very very very very long text!')
     buyer2 = User(username='messi10', name='Lionel Messi', email='messi10@gmail.com', phone='0987654323', address='128 Thai Thinh, Thanh Xuan, Ha Noi',
                   bio='This is a very very very very very very very long text and messi number 1!')
     buyer3 = User(username='ronaldo7', name='Cristiano Ronaldo', email='ronaldo7@gmail.com', phone='0987654324', address='129 Thai Thinh, Thanh Xuan, Ha Noi',
                   bio='This is a very very very very very very very long text and ronaldo number 1!')
-    seller.set_password('123456')
+    # seller.set_password('123456')
     buyer1.set_password('123456')
     buyer2.set_password('123456')
     buyer3.set_password('123456')
-    db.session.add(seller)
+    # db.session.add(seller)
     db.session.add(buyer1)
     db.session.add(buyer2)
     db.session.add(buyer3)
