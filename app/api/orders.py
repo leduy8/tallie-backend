@@ -22,16 +22,45 @@ from ..middlewares import token_required
 #     if type(data['product_id']) is not int or type(data['quantity']) is not int or type(data['card_number']) is not str or type(data['recipient_name']) is not str or type(data['recipient_phone']) is not str or type(data['deliver_to']) is not str:
 #         return bad_request('Please recheck all field inputs data types.')
 
-#     # !!! Not done, wait for shipping service to deploy
-#     # !!! Not done, wait for shipping service to deploy
-#     # !!! Not done, wait for shipping service to deploy
+#     # TODO Xử lý order api: Gửi order từ server đến 2 service shipping với payment,
+#     # TODO gửi đến shipping để bên shipping nhận order, gửi đến payment để thanh toán.
 
-#     url = current_app.config['SHIPPING_SERVICE_URL'] + 'whatever-it-is'
-#     data = {}
+#     # TODO Xử lý trường hợp request post fail ở 1 hay cả 2 service vệ tinh
 
-#     req = requests.post(
-#         url=url,
-#         data=data
+#     # TODO Xử lý order view: Lấy tất cả order, lấy order details.
+
+#     token = user.get_generate_token()
+#     shipping_url = current_app.config['SHIPPING_SERVICE_URL'] + '/api/orders'
+#     data_shipping = {
+#         'productId': data['product_id'],
+#         'quantity': data['quantity'],
+#         'recipientName': data['recipient_name'],
+#         'recipientPhone': data['recipient_phone'],
+#         'deliverTo': data['deliver_to']
+#     }
+
+#     req_shipping = requests.post(
+#         url=shipping_url,
+#         data=data_shipping,
+#         headers={
+#             'Content-Type': 'application/json',
+#             'X-Auth-Token': token
+#         }
+#     )
+
+#     payment_url = current_app.config['PAYMENT_SERVICE_URL'] + '/api/cards/'
+#     data_payment = {
+#         # ! Recheck data for executing transfer procedure
+#     }
+
+#     req_payment = requests.post(
+#         url=payment_url,
+#         data=data_payment,
+#         headers={
+#             'Content-Type': 'application/json',
+#             # ? What in here specifically
+#             # 'X-Credentials': token
+#         }
 #     )
 
 #     return 'OK'

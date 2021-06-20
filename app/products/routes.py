@@ -88,7 +88,7 @@ def your_product_new():
         product = Product(
             name=form.name.data, 
             author=form.author.data, 
-            price=form.price.data, 
+            price=form.price.data / 1000, 
             quantity=form.quantity.data, 
             description=form.description.data,
             seller_id=current_user.id
@@ -144,7 +144,7 @@ def your_product_edit(id):
 
         product.name = form.name.data
         product.author = form.author.data
-        product.price = form.price.data
+        product.price = form.price.data / 1000
         product.quantity = form.quantity.data
         product.description = form.description.data
         db.session.add(product)

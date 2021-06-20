@@ -37,7 +37,7 @@
                                         <a href="{{ url_for('products.your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a>
                                     </h4>
                                     <p class="card-text">
-                                        {{ "{:,}".format(product.price|int) }} đ
+                                        {{ "{:,}".format((product.price * 1000)|int) }} đ
                                     </p>
                                 </div>
                             </div>

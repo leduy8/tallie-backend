@@ -31,7 +31,7 @@
             </div>
             <div class="input-container">
                 {{ form.price.label(class='label') }}
-                {{ form.price(value=product.price, placeholder="Price", class="input-number", type="number") }}
+                {{ form.price(value=product.price * 1000, placeholder="Price", class="input-number", type="number") }}
                 VND
             </div>
             <div class="input-container">
