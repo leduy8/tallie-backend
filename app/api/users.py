@@ -66,6 +66,9 @@ def user_update(decoded):
     if 'email' not in data or 'name' not in data or 'phone' not in data or 'password' not in data  or 'address' not in data or 'bio' not in data:
         return bad_request('Please input all fields for user\'s update')
 
+    if User.query.filter_by(email=data['email']).first():
+        return bad_request('Email has already in use by another account.')
+
     user.name = data['name']
     user.phone = data['phone']
     user.address = data['address']

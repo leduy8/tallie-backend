@@ -18,7 +18,7 @@ def token_required(f):
         try:
             data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
             return f(data, *args, **kwargs)
-        except:
+        except Exception as e:
             return unauthorized('Token is invalid!')
 
     return decorated

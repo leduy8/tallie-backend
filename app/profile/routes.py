@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from app import db
 from app.profile import bp
 from .forms import ProfileForm, PaymentForm
-from ..models import Payment, Avatar
+from ..models import Payment, Avatar, User
 
 
 @bp.route('/profile')
@@ -23,6 +23,9 @@ def edit_profile_info():
     payment = Payment.query.filter_by(user_id=current_user.id).first()
 
     if form.validate_on_submit():
+        if User.query.filter_by(email=form.email.data).first():
+            flash('Email has already in use by another account.')
+            return redirect(url_for('profile.profile'))
         current_user.name = form.name.data
         current_user.phone = form.phone.data
         current_user.address = form.address.data
