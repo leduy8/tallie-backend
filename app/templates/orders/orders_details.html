@@ -11,8 +11,8 @@
 {% block content %}
     <div class="container">
         <section class="title">
-            <h2>Order #{{ order.id }}</h2>
-            <p>{{ order.createdAt.strftime('%H:%M:%S %d/%m/%Y') }}</p>
+            <h2>Order {{ order._id }}</h2>
+            <p>{{ order.createdAt }}</p>
         </section>
         
         <hr>
@@ -25,11 +25,11 @@
                         <div class="card-body">
                             <div class="row">
                                 <p class="card-text">
-                                    <img class="product-image ml-2 mr-4" src="{{ product.pictures[0] }}" alt="Product's image">
+                                    <img class="product-image ml-2 mr-4" src="{{ [image_service_url, product.pictures[0].img_id]|join('') }}" alt="Product's image">
                                     <div class="">
                                         <p>Name: {{ product.name }}</p>
-                                        <p>Price: {{ product.price }}</p>
-                                        <p>Quantity: {{ product.quantity }}</p>
+                                        <p>Price: {{ "{:,}".format((product.price * 1000)|int) }} đ</p>
+                                        <p>Quantity: {{ order.quantity }}</p>
                                     </div>
                                 </p>
                             </div>
@@ -53,9 +53,24 @@
             <div class="card1 mt-4">
                 <ul id="progressbar" class="text-center">
                     <li class="active step0"></li>
-                    <li class="step0"></li>
-                    <li class="step0"></li>
-                    <li class="step0"></li>
+
+                    {% if order.hasTaken %}
+                        <li class="active step0"></li>
+                    {% else %}
+                        <li class="step0"></li>
+                    {% endif %}
+
+                    {% if order.isDelivering %}
+                        <li class="active step0"></li>
+                    {% else %}
+                        <li class="step0"></li>
+                    {% endif %}
+
+                    {% if order.isDelivered %}
+                        <li class="active step0"></li>
+                    {% else %}
+                        <li class="step0"></li>
+                    {% endif %}
                 </ul>
                 <h6 class="mb-5">Bagging the product</h6>
                 <h6 class="mb-5">Tallie has taken the package</h6>

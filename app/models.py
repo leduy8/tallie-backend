@@ -93,6 +93,9 @@ class User(UserMixin, db.Model):
     def get_validate_token(self, expires_in=600):
         return jwt.encode({'id': self.id, 'exp': time() + expires_in}, current_app.config['SECRET_KEY'], algorithm='HS256')
 
+    def get_seller_token(self):
+        return jwt.encode({'seller_id': self.id}, current_app.config['SECRET_KEY'], algorithm='HS256')
+
     @staticmethod
     def verify_generated_token(token):
         try:

@@ -29,3 +29,9 @@ def user_login():
 @token_required
 def user_validation(decoded):
     return jsonify({'id': decoded['id']})
+
+
+@bp.route('/auth/seller/validate')
+@token_required
+def seller_validation(decoded):
+    return jsonify({'seller_id': decoded['seller_id']})

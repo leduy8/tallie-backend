@@ -2,20 +2,12 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    # SECRET_KEY = os.environ.get('SECRET_KEY') or 'Tallie1234'
-    # MAIL_SERVER = os.environ.get('MAIL_SERVER')
-    # MAIL_PORT = int(os.environ.get('MAIL_PORT'))
-    # MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS')
-    # MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-
-    # ? For heroku
-    SECRET_KEY = os.environ['SECRET_KEY'] or 'Tallie1234'
-    MAIL_SERVER = os.environ['MAIL_SERVER']
-    MAIL_PORT = int(os.environ['MAIL_PORT'])
-    MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
-    MAIL_USERNAME = os.environ['MAIL_USERNAME']
-    MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
+    SECRET_KEY = os.getenv('SECRET_KEY') or 'Tallie1234'
+    MAIL_SERVER = os.getenv('MAIL_SERVER')
+    MAIL_PORT = os.getenv('MAIL_PORT')
+    MAIL_USE_TLS = os.getenv('MAIL_USE_TLS')
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     ADMINS = ['no-reply@tallie.com']
     PRODUCTS_PER_PAGE = 6
     REVIEWS_PER_PAGE = 8
