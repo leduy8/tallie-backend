@@ -32,6 +32,10 @@
                 {{ form.quantity.label() }}:
                 {{ form.quantity(placeholder="Quantity", class="input-number", type="number") }}
             </div>
+            <div class="input-container">
+                {{ form.category.label() }}:
+                {{ form.category(class="input-text") }}
+            </div>
             <div>
                 <h3>{{ form.description.label() }}</h3>
                 <textarea name="description" id="description" cols="30" rows="10"></textarea>

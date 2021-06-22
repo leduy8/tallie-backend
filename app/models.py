@@ -188,6 +188,13 @@ class Product(db.Model):
             'quantity': self.quantity
         }
 
+    def get_category(self):
+        return self.categories[0]
+
+    def set_category(self, new_category_object):
+        self.categories.remove(self.categories[0]) 
+        self.categories.append(new_category_object)
+
     def __repr__(self) -> str:
         return f'<Product {self.name}>'
 

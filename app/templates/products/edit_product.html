@@ -38,6 +38,18 @@
                 {{ form.quantity.label(class='label') }}
                 {{ form.quantity(value=product.quantity, placeholder="Quantity", class="input-number", type="number") }}
             </div>
+            <div class="input-container">
+                <label for="category" class="label">Category</label>
+                <select name="category" id="category" class="input-text">
+                    {% for category in categories %}
+                        {% if category.id == product_category.id %}
+                            <option selected value="{{ category.id }}">{{ category.name }}</option>
+                        {% else %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
             <div>
                 <h3>{{ form.description.label }}</h3>
                 <textarea name="description" id="description" cols="30" rows="10">{{ product.description }}</textarea>

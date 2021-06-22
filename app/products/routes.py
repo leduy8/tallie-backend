@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from app import db
 from app.products import bp
 from .forms import ProductForm, SearchForm
-from ..models import User, Product, Review, Picture
+from ..models import Category, User, Product, Review, Picture
 
 
 @bp.route('/your_product')
@@ -67,12 +67,14 @@ def your_product_delete(id):
 @login_required
 def your_product_new():
     form = ProductForm()
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
 
     url =  current_app.config['IMAGE_SERVICE_URL'] + '/upload_multiple'
     headers = {}
     payload = {}
 
     if request.method == 'POST' and form.validate_on_submit():
+        category = Category.query.filter_by(id=form.category.data).first()
         if request.files['images'].filename != '':
             files = []
             for file in form.images.data:
@@ -93,6 +95,7 @@ def your_product_new():
             description=form.description.data,
             seller_id=current_user.id
         )
+        product.categories.append(category)
         db.session.add(product)
         db.session.commit()
 
@@ -112,7 +115,10 @@ def your_product_new():
 @login_required
 def your_product_edit(id):
     form = ProductForm()
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
     product = Product.query.filter_by(id=id).first()
+    product_category = product.get_category()
+    categories = Category.query.all()
 
     upload_url =  current_app.config['IMAGE_SERVICE_URL'] + '/upload_multiple'
     headers = {}
@@ -125,6 +131,7 @@ def your_product_edit(id):
         pictures.append(pic.img_id)
 
     if form.validate_on_submit():
+        category = Category.query.filter_by(id=form.category.data).first()
         if request.files['images'].filename != '':
             files = []
             for file in form.images.data:
@@ -147,6 +154,8 @@ def your_product_edit(id):
         product.price = form.price.data / 1000
         product.quantity = form.quantity.data
         product.description = form.description.data
+        if product_category != category:
+            product.set_category(category)
         db.session.add(product)
         db.session.commit()
         flash('Your changes has been made.')
@@ -157,7 +166,7 @@ def your_product_edit(id):
         form.price.data = product.price
         form.quantity.data = product.quantity
         form.description.data = product.description
-    return render_template('products/edit_product.html', form=form, product=product, image_service_url=image_service_url, pictures=pictures)
+    return render_template('products/edit_product.html', form=form, product=product, image_service_url=image_service_url, pictures=pictures, categories=categories, product_category=product_category)
 
 
 @bp.route('/your_product/pictures/<id>/delete')
