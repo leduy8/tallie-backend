@@ -2,7 +2,7 @@ import jwt
 from werkzeug.security import generate_password_hash
 from flask import jsonify, request, current_app
 from app.api import bp
-from .errors import bad_request, not_found
+from .errors import bad_request, not_found, unauthorized
 from ..models import User
 from ..middlewares import token_required
 
@@ -28,10 +28,16 @@ def user_login():
 @bp.route('/auth/validate')
 @token_required
 def user_validation(decoded):
-    return jsonify({'id': decoded['id']})
+    if len(decoded.keys()) == 1 and 'id' in decoded:
+        return jsonify({'id': decoded['id']})
+    return unauthorized('Invalid token')
+    
 
 
 @bp.route('/auth/seller/validate')
 @token_required
 def seller_validation(decoded):
-    return jsonify({'seller_id': decoded['seller_id']})
+    if len(decoded.keys()) == 1 and 'seller_id' in decoded:
+        return jsonify({'seller_id': decoded['seller_id']})
+    return unauthorized('Invalid token')
+    
