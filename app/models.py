@@ -184,8 +184,10 @@ class Product(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'author': self.author,
             'price': self.price,
-            'quantity': self.quantity
+            'quantity': self.quantity,
+            'pictures': [pic.get_picture_info() for pic in self.pictures.all()]
         }
 
     def get_category(self):
