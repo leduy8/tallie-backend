@@ -141,4 +141,4 @@ def product_validation(id):
     if not product:
         return not_found('Product\'s not found')
 
-    return jsonify({'seller_id': product.id})
+    return jsonify({'seller_id': product.seller_id})
