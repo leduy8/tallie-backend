@@ -42,8 +42,11 @@ def payment_register(decoded):
         json=data
     )
 
-    if req.status_code == 400 or req.status_code == 401:
+    if req.status_code == 400 or req.status_code == 401 :
         return bad_request('Connect failed, invalid infomations.')
+
+    if req.status_code == 404:
+        return not_found('Card not found')
 
     payment = Payment(card_number=data['card_number'], credentials=req.text, user_id=user.id)
     try:
