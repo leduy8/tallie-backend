@@ -59,7 +59,7 @@ def create_order(decoded):
     )
 
     if req_shipping.status_code == 400:
-        return internal_server_error('Something went wrong with the server. Please try again in another time. 123')
+        return internal_server_error('Something went wrong with the server. Please try again in another time.')
 
     payment_url = current_app.config['PAYMENT_SERVICE_URL'] + '/api/cards/transfer'
     data_payment = {
@@ -87,9 +87,9 @@ def create_order(decoded):
         )
 
         if req_shipping_delete.status_code == 400:
-            return internal_server_error('Something went wrong with the server. Please try again in another time. 456')
+            return internal_server_error('Something went wrong with the server. Please try again in another time.')
 
-        return internal_server_error('Something went wrong with the server. Please try again in another time. 789')
+        return internal_server_error('Something went wrong with the server. Please try again in another time.')
 
     product.quantity = product.quantity - data['quantity']
     db.session.add(product)
