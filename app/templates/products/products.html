@@ -37,7 +37,11 @@
                                         <a href="{{ url_for('products.your_product_details', id=product.id) }}" title="View Product">{{ product.name }}</a>
                                     </h4>
                                     <p class="card-text">
-                                        {{ "{:,}".format((product.price * 1000)|int) }} đ
+                                        {% if product.quantity == 0 %}
+                                            <p class="out-of-stock-label">OUT OF STOCK</p>
+                                        {% else %}
+                                            {{ "{:,}".format((product.price * 1000)|int) }} đ
+                                        {% endif %}
                                     </p>
                                 </div>
                             </div>

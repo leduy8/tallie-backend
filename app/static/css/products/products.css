@@ -33,3 +33,8 @@
   width: 100%;
   height: 450px;
 }
+
+.out-of-stock-label {
+  text-transform: uppercase;
+  color: #d9534f;
+}
