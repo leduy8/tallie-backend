@@ -37,7 +37,7 @@ def post_a_review(decoded, product_id):
     if not user:
         return not_found('User\'s not found')
 
-    if Review.query.filter_by(user_id=user.id).first():
+    if Review.query.filter_by(user_id=user.id).filter_by(product_id=product_id).first():
         return bad_request('User can only have 1 review per product.')
 
     if 'star' not in data or 'overview' not in data or 'content' not in data or 'prevent_spoiler' not in data:
@@ -85,7 +85,7 @@ def edit_a_review(decoded, product_id):
     if not product:
         return not_found('Product\'s not found')
 
-    review = Review.query.filter_by(user_id=user.id).first()
+    review = Review.query.filter_by(user_id=user.id).filter_by(product_id=product_id).first()
 
     review.star = data['star'],
     review.overview = data['overview'],
@@ -116,7 +116,7 @@ def delete_a_review(decoded, product_id):
     if not product:
         return not_found('Product\'s not found')
 
-    review = Review.query.filter_by(user_id=user.id).first()
+    review = Review.query.filter_by(user_id=user.id).filter_by(product_id=product_id).first()
 
     db.session.delete(review)
     db.session.commit()
