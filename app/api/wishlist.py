@@ -16,7 +16,7 @@ def wishlist_products(decoded):
 
     page = request.args.get('page', 1, type=int)
     wishlist_products = db.session.query(Wishlist, Product).filter(Wishlist.user_id==user.id).join(Product, Wishlist.product_id==Product.id).paginate(
-        page, current_app.config['PRODUCTS_PER_PAGE'], False
+        page, current_app.config['API_PRODUCTS_PER_PAGE'], False
     )
     next_page = page=wishlist_products.next_num if wishlist_products.has_next else None
     prev_page = page=wishlist_products.prev_num if wishlist_products.has_prev else None
@@ -29,7 +29,7 @@ def wishlist_products(decoded):
         'products': [product.get_product_info_minimum() for product in products],
         '_meta': {
             'page': page or 1,
-            'per_page': current_app.config['PRODUCTS_PER_PAGE'],
+            'per_page': current_app.config['API_PRODUCTS_PER_PAGE'],
             'total_pages': wishlist_products.pages,
             'total_items': wishlist_products.total,
             'next_page': next_page,

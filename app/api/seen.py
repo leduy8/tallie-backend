@@ -16,7 +16,7 @@ def seen_products(decoded):
 
     page = request.args.get('page', 1, type=int)
     seen_products = db.session.query(Seen, Product).filter(Seen.user_id==user.id).join(Product, Seen.product_id==Product.id).paginate(
-        page, current_app.config['PRODUCTS_PER_PAGE'], False
+        page, current_app.config['API_PRODUCTS_PER_PAGE'], False
     )
     next_page = page=seen_products.next_num if seen_products.has_next else None
     prev_page = page=seen_products.prev_num if seen_products.has_prev else None
@@ -29,7 +29,7 @@ def seen_products(decoded):
         'products': [product.get_product_info_minimum() for product in products],
         '_meta': {
             'page': page or 1,
-            'per_page': current_app.config['PRODUCTS_PER_PAGE'],
+            'per_page': current_app.config['API_PRODUCTS_PER_PAGE'],
             'total_pages': seen_products.pages,
             'total_items': seen_products.total,
             'next_page': next_page,

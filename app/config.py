@@ -10,6 +10,7 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     ADMINS = ['no-reply@tallie.com']
     PRODUCTS_PER_PAGE = 6
+    API_PRODUCTS_PER_PAGE = 25
     REVIEWS_PER_PAGE = 8
 
     # ? For sqlite

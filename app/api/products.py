@@ -28,7 +28,7 @@ def featured_products():
     page = request.args.get('page', 1, type=int)
     featured = db.session.query(Product, func.sum(Review.star)).join(Product).filter(
         Review.product_id==Product.id).group_by(Product.id).order_by(func.sum(Review.star).desc()).paginate(
-            page, current_app.config['PRODUCTS_PER_PAGE'], False
+            page, current_app.config['API_PRODUCTS_PER_PAGE'], False
         )
     next_page = page=featured.next_num if featured.has_next else None
     prev_page = page=featured.prev_num if featured.has_prev else None
@@ -37,7 +37,7 @@ def featured_products():
         'data': [product_count[0].get_product_info() for product_count in featured.items],
         '_meta': {
             'page': page or 1,
-            'per_page': current_app.config['PRODUCTS_PER_PAGE'],
+            'per_page': current_app.config['API_PRODUCTS_PER_PAGE'],
             'total_pages': featured.pages,
             'total_items': featured.total,
             'next_page': next_page,
@@ -58,7 +58,7 @@ def most_viewed_products():
     page = request.args.get('page', 1, type=int)
     products_counts = db.session.query(Product, func.count(Seen.product_id)).join(Product).filter(
         Seen.product_id == Product.id).group_by(Product.id).order_by(func.count(Seen.product_id).desc()).paginate(
-            page, current_app.config['PRODUCTS_PER_PAGE'], False
+            page, current_app.config['API_PRODUCTS_PER_PAGE'], False
         )
     next_page = page=products_counts.next_num if products_counts.has_next else None
     prev_page = page=products_counts.prev_num if products_counts.has_prev else None
@@ -67,7 +67,7 @@ def most_viewed_products():
         'data': [{'product': product_count[0].get_product_info(), 'count': product_count[1]} for product_count in products_counts.items],
         '_meta': {
             'page': page or 1,
-            'per_page': current_app.config['PRODUCTS_PER_PAGE'],
+            'per_page': current_app.config['API_PRODUCTS_PER_PAGE'],
             'total_pages': products_counts.pages,
             'total_items': products_counts.total,
             'next_page': next_page,
@@ -93,19 +93,19 @@ def searched_products():
 
     if price_range and author:
         products = Product.query.filter(or_(Product.name.ilike(f'%{query}%'), Product.author.ilike(f'%{author}%'))).filter(and_(Product.price > min_price, Product.price < max_price)).paginate(
-            page, current_app.config['PRODUCTS_PER_PAGE'], False
+            page, current_app.config['API_PRODUCTS_PER_PAGE'], False
         )
     elif price_range:
         products = Product.query.filter(Product.name.ilike(f'%{query}%')).filter(and_(Product.price > min_price, Product.price < max_price)).paginate(
-            page, current_app.config['PRODUCTS_PER_PAGE'], False
+            page, current_app.config['API_PRODUCTS_PER_PAGE'], False
         )
     elif author:
         products = Product.query.filter(or_(Product.name.ilike(f'%{query}%'), Product.author.ilike(f'%{author}%'))).paginate(
-            page, current_app.config['PRODUCTS_PER_PAGE'], False
+            page, current_app.config['API_PRODUCTS_PER_PAGE'], False
         )
     else:
         products = Product.query.filter(Product.name.ilike(f'%{query}%')).paginate(
-            page, current_app.config['PRODUCTS_PER_PAGE'], False
+            page, current_app.config['API_PRODUCTS_PER_PAGE'], False
         )
 
     next_page = products.next_num if products.has_next else None
@@ -115,7 +115,7 @@ def searched_products():
         'products': [product.get_product_info() for product in products.items],
         '_meta': {
             'page': page or 1,
-            'per_page': current_app.config['PRODUCTS_PER_PAGE'],
+            'per_page': current_app.config['API_PRODUCTS_PER_PAGE'],
             'total_pages': products.pages,
             'total_items': products.total,
             'next_page': next_page,
