@@ -86,7 +86,7 @@ def delete_from_wishlist(decoded):
         return bad_request('Invalid product id')
 
     user.wishlist.remove(product)
-    db.session.delete(user)
+    db.session.add(user)
     db.session.commit()
 
     return jsonify('Deleted from wishlist')
